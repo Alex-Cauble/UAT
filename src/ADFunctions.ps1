@@ -116,6 +116,7 @@ Function Set-Staff {
   }
 
   $user = Get-ADUser -Identity $GUID
+  Start-Sleep -Seconds 5
   $user | Set-ADUser -UserPrincipalName $UserPrincipalName 
   $user | Set-ADUser -DisplayName $DisplayName
   $user | Set-ADUser -SamAccountName $SamAccountName
@@ -189,8 +190,8 @@ Function Set-Student {
   $ConfirmPreference = 'None'
   
   $Date = Get-Date -Format "%y"
-  $FullDate = Get-Date -Format "yyyy-MM-dd"
-  $DateTime = Get-Date
+  # $FullDate = Get-Date -Format "yyyy-MM-dd"
+  # $DateTime = Get-Date
 
   $ID = $UserName
   $Surname = $LastName
@@ -519,8 +520,8 @@ function Disable-UserNow {
   Move-ADObject -Identity $user.DistinguishedName -TargetPath $OU
 
 
-  if ($log -ne $null) {
-    Sleep 5
+  if ($null -ne $log) {
+    Start-Sleep -Seconds 5
 
     Get-ADUser $SamAccountName `
       -Properties `
