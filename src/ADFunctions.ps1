@@ -52,6 +52,8 @@ Function New-Staff {
     -Company $Position `
     -Path $OU
 
+  Start-Sleep -Seconds 5
+
   Set-ADUser -Identity $SamAccountName `
     -Enabled $true `
     -ChangePasswordAtLogon $true `
@@ -59,6 +61,8 @@ Function New-Staff {
   Set-ADUser -Identity $SamAccountName -Replace @{MailNickName = $SamAccountName}
   Set-ADUser -Identity $SamAccountName -Replace @{msExchHideFromAddressLists = $false}
   Set-ADUser -Identity $SamAccountName -Add @{proxyAddresses = "SMTP:$UserPrincipalName"}
+
+  Start-Sleep -Seconds 5
 
   Group-Staff -UserName $SamAccountName `
     -Position $Position `
