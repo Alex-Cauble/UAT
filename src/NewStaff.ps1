@@ -346,8 +346,8 @@ function CreateInfo {
         $obj.Surname = $TextBox_LastName.Text;
       } if ($TextBox_NickName.Text.Length -ne 0) {
         $obj.NickName = $TextBox_NickName.Text;
-      } if ($DropDown1_Position.SelectedItem.Length -ne 0) {
-        $obj.Position = $DropDown1_Position.SelectedItem;
+      } if ($DropDown1_Position.Text.Length -ne 0) {
+        $obj.Position = $DropDown1_Position.Text;
       } if ($DropDown2_Department.SelectedItem.Length -ne 0) {
         $obj.Department = $DropDown2_Department.SelectedItem;
       } if ($DropDown3_Building.SelectedItem.Length -ne 0) {
