@@ -398,6 +398,9 @@ function CreateInfo {
   $form.Controls.Add($checkBox_CLC);
   $form.Controls.Add($checkBox_OEC);
   $form.Controls.Add($checkBox_PAE);
+  $form.add_Shown( {
+      $TextBox_FirstName.Focus();
+    })
   $form.Controls.Add($checkBox_RIV);
   [void]$form.ShowDialog();
   Write-Output $obj
