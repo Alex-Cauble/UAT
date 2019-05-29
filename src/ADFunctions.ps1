@@ -52,7 +52,7 @@ Function New-Staff {
     -Company $Position `
     -Path $OU
 
-  Start-Sleep -Seconds 5
+  Start-Sleep -Seconds 2
 
   Set-ADUser -Identity $SamAccountName `
     -Enabled $true `
@@ -62,7 +62,7 @@ Function New-Staff {
   Set-ADUser -Identity $SamAccountName -Replace @{msExchHideFromAddressLists = $false}
   Set-ADUser -Identity $SamAccountName -Add @{proxyAddresses = "SMTP:$UserPrincipalName"}
 
-  Start-Sleep -Seconds 5
+  Start-Sleep -Seconds 2
 
   Group-Staff -UserName $SamAccountName `
     -Position $Position `
@@ -120,7 +120,7 @@ Function Set-Staff {
   }
 
   $user = Get-ADUser -Identity $GUID
-  Start-Sleep -Seconds 5
+  Start-Sleep -Seconds 2
   $user | Set-ADUser -UserPrincipalName $UserPrincipalName 
   $user | Set-ADUser -DisplayName $DisplayName
   $user | Set-ADUser -SamAccountName $SamAccountName
