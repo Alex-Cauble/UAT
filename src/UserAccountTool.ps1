@@ -7,7 +7,8 @@
 [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
 
 #Importing used modules
-Import-Module ActiveDirectory
+$s = New-PSSession -ComputerName 'sccm'   
+Import-Module -PSSession $s -Name ActiveDirectory
 
 . "$($PSScriptRoot)\GuiFunctions.ps1"
 . "$($PSScriptRoot)\NewStaff.ps1"
