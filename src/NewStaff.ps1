@@ -15,7 +15,6 @@ function CreateInfo {
     'Building'       = ":Primary Building"
     'CheckBoxHeader' = "All Building Locations Worked"
   }
-  $textInfo = (Get-Culture).TextInfo
 
   $Global:useNickname = $true
   #Spacing GUI Elements X

@@ -13,8 +13,6 @@ function ModifyStudent {
   . "$($PSScriptRoot)\GuiFunctions.ps1"
   . "$($PSScriptRoot)\ADFunctions.ps1"
 
-  $textInfo = (Get-Culture).TextInfo
-
   $LabelData = @{
     'LastName'       = "Last Name:"
     'FirstName'      = "First Name:"
