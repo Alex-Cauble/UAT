@@ -181,6 +181,7 @@ $button_ModifyUser.Add_Click( {
     } catch {
       [System.Windows.Forms.MessageBox]::Show("Select a user to modify.", "Selected User Required", [System.Windows.Forms.MessageBoxButtons]::OK)
     }
+    $textBox_SearchName.text = $userdata[1]
     searchADUser
   })
 $Form_LookUp.Controls.Add($button_ModifyUser)
@@ -203,7 +204,7 @@ $button_DisableUser.Add_Click( {
     } catch {
       [System.Windows.Forms.MessageBox]::Show("Select a user to Disable.", "Selected User Required", [System.Windows.Forms.MessageBoxButtons]::OK)
     }
-
+    $textBox_SearchName.text = $userdata[1]
     searchADUser
   })
 $Form_LookUp.Controls.Add($button_DisableUser)
