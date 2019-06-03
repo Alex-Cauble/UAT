@@ -258,7 +258,7 @@ function ModifyStudent {
   $textBox_ModifiedFirstName.TabIndex = 0
   $textBox_ModifiedFirstName.Enabled = $True
   $textBox_ModifiedFirstName.add_TextChanged( {
-      $textBox_ModifiedFirstName.Text = $textInfo.ToTitleCase($textBox_ModifiedFirstName.Text) 
+      $textBox_ModifiedFirstName.Text = CapitalizeName -Name $textBox_ModifiedFirstName.Text
       $textBox_ModifiedFirstName.SelectionStart = $textBox_ModifiedFirstName.Text.Length
       $textBox_ModifiedFirstName.SelectionLength = 0   
     })
@@ -271,7 +271,7 @@ function ModifyStudent {
   $textBox_ModifiedLastName.TabIndex = 1
   $textBox_ModifiedLastName.Enabled = $True
   $textBox_ModifiedLastName.add_TextChanged( {
-      $textBox_ModifiedLastName.Text = $textInfo.ToTitleCase($textBox_ModifiedLastName.Text) 
+      $textBox_ModifiedLastName.Text = CapitalizeName -Name $textBox_ModifiedLastName.Text
       $textBox_ModifiedLastName.SelectionStart = $textBox_ModifiedLastName.Text.Length
       $textBox_ModifiedLastName.SelectionLength = 0   
     })

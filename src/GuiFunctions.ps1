@@ -251,12 +251,16 @@ function PopulateNewStudent {
   $Button_Apply.TabIndex = 5
 }
 
-function CapTextField {
+function CapitalizeName {
   param (
-    [System.Windows.Forms.TextBox] $TextBox
+    $Name
   )
-  $TextInfo = (Get-Culture).TextInfo
-  $TextBox.Text = $TextInfo.ToTitleCase($TextBox.Text)
-  $TextBox.SelectionStart = $TextBox.Text.Length
-  $TextBox.SelectedText = 0
+  if ($Name.Length -gt 0) {
+    $upper = $Name.ToUpper()
+    $upper = $upper.toChararray()
+    $Name = $Name.ToCharArray()
+    $name[0] = $upper[0]
+    $name = -join $name
+  }
+  Write-Output $Name
 }

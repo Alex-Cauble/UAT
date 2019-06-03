@@ -161,6 +161,8 @@ Function Set-Staff {
   $DN = Get-ADUser -Identity $SamAccountName | Select-Object -ExpandProperty DistinguishedName
   Move-ADObject -Identity $DN -TargetPath $OU
 
+  Start-Sleep -Seconds 2
+
   Group-Staff -UserName $SamAccountName `
     -Position $Position `
     -AHS $AHS `
@@ -234,7 +236,7 @@ Function Set-Student {
     $DN = Get-ADUser -Identity $SamAccountName | Select-Object DistinguishedName
     $DNOnly = $DN.DistinguishedName
     Move-ADObject -Identity "$DNOnly" -TargetPath $OU
-    Start-Sleep -Seconds 5
+    Start-Sleep -Seconds 2
 
     Add-ADGroupMember "DistrictStudents" $SamAccountName
     Add-ADGroupMember "Student-PSO" $SamAccountName
@@ -341,7 +343,7 @@ Function Group-Staff {
     [Bool] $PAE,
     [Bool] $RIV
   )
-  Start-Sleep -Seconds 5
+  Start-Sleep -Seconds 2
   $ConfirmPreference = 'None'
 
   # ---=== Set variables for Group Membership ===---
@@ -525,7 +527,7 @@ function Disable-UserNow {
 
 
   if ($null -ne $log) {
-    Start-Sleep -Seconds 5
+    Start-Sleep -Seconds 2
 
     Get-ADUser $SamAccountName `
       -Properties `

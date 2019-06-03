@@ -354,7 +354,7 @@ function ModifyStaff {
   $textBox_ModifiedFirstName.TabIndex = 0
   $textBox_ModifiedFirstName.Size = $textBoxSize
   $textBox_ModifiedFirstName.add_TextChanged( {
-      $textBox_ModifiedFirstName.Text = $textinfo.ToTitleCase($textBox_ModifiedFirstName.Text)
+      $textBox_ModifiedFirstName.Text = CapitalizeName -Name $textBox_ModifiedFirstName.Text
       $textBox_ModifiedFirstName.SelectionStart = $textBox_ModifiedFirstName.Text.Length
       $textBox_ModifiedFirstName.SelectionLength = 0
     })
@@ -366,7 +366,7 @@ function ModifyStaff {
   $textBox_ModifiedLastName.TabIndex = 1
   $textBox_ModifiedLastName.Size = $textBoxSize
   $textBox_ModifiedLastName.add_TextChanged( {
-      $textBox_ModifiedLastName.Text = $textinfo.ToTitleCase($textBox_ModifiedLastName.Text)
+      $textBox_ModifiedLastName.Text = CapitalizeName -Name $textBox_ModifiedLastName.Text
       $textBox_ModifiedLastName.SelectionStart = $textBox_ModifiedLastName.Text.Length
       $textBox_ModifiedLastName.SelectionLength = 0
     })
@@ -378,7 +378,7 @@ function ModifyStaff {
   $textBox_ModifiedNickName.TabIndex = 2
   $textBox_ModifiedNickName.Size = $textBoxSize
   $textBox_ModifiedNickName.add_TextChanged( {
-      $textBox_ModifiedNickName.Text = $textinfo.ToTitleCase($textBox_ModifiedNickName.Text)
+      $textBox_ModifiedNickName.Text = CapitalizeName -Name $textBox_ModifiedNickName.Text
       $textBox_ModifiedNickName.SelectionStart = $textBox_ModifiedNickName.Text.Length
       $textBox_ModifiedNickName.SelectionLength = 0
     })
