@@ -1,9 +1,9 @@
 function searchADUser {
-    
+
   $listview_USers.Items.Clear()
   $listview_USers.Columns.Clear()
   try {
-    if ($textBox_SearchName -ne "") { 
+    if ($textBox_SearchName -ne "") {
       $Users = @(Get-ADUser -LDAPFilter ("(anr=" + $textBox_SearchName.text + ")") -Properties DisplayName, LockedOut, AccountExpirationDate|
           Where-Object {($_.distinguishedname -notlike "*Users*") -and ($_.distinguishedname -notlike "*Test*") -and ($_.distinguishedname -notlike "*TechDept*")}|
           Select-Object SamAccountName, Name, DisplayName, Enabled, LockedOut, @{n = 'ExpDate'; e = {$_.AccountExpirationDate.ToShortDateString()}}, @{n = 'OU'; e = {$_.DistinguishedName.split(',')[1].split('=')[1]}}|
@@ -11,7 +11,7 @@ function searchADUser {
       PopulateListView -Users $Users
     }
   } catch {
-    $null 
+    $null
   }
 }
 
@@ -19,7 +19,7 @@ function searchStaff {
   $listview_USers.Items.Clear()
   $listview_USers.Columns.Clear()
   try {
-    if ($textBox_SearchName -ne "") { 
+    if ($textBox_SearchName -ne "") {
       $Users = @(Get-ADUser -LDAPFilter ("(anr=" + $textBox_SearchName.text + ")") -Properties DisplayName, LockedOut, AccountExpirationDate|
           Where-Object {($_.distinguishedname -notlike "*Users*") -and ($_.distinguishedname -notlike "*Test*") -and ($_.distinguishedname -notlike "*TechDept*") -and ($_.distinguishedname -notlike "*Student*")}|
           Select-Object SamAccountName, Name, DisplayName, Enabled, LockedOut, @{n = 'ExpDate'; e = {$_.AccountExpirationDate.ToShortDateString()}}, @{n = 'OU'; e = {$_.DistinguishedName.split(',')[1].split('=')[1]}}|
@@ -32,11 +32,11 @@ function searchStaff {
 }
 
 function searchStudent {
-    
+
   $listview_USers.Items.Clear()
   $listview_USers.Columns.Clear()
   try {
-    if ($textBox_SearchName -ne "") { 
+    if ($textBox_SearchName -ne "") {
       $Users = @(Get-ADUser -LDAPFilter ("(anr=" + $textBox_SearchName.text + ")") -Properties DisplayName, LockedOut -SearchBase "OU=STUDENT,DC=ISD492,DC=Local" |
           Select-Object SamAccountName, Name, DisplayName, Enabled, LockedOut, @{n = 'OU'; e = {$_.DistinguishedName.split(',')[1].split('=')[1]}}|
           Sort-Object DisplayName)
@@ -64,7 +64,7 @@ function PopulateListView {
     }
     $listview_Users.Items.Add($userListViewItem) | Out-Null
   }
-  $listview_Users.AutoResizeColumns("HeaderSize") 
+  $listview_Users.AutoResizeColumns("HeaderSize")
   if ($users.Count -eq 1) {
     $listview_Users.Items[0].Selected = $true
     $listview_Users.Select()
@@ -77,12 +77,12 @@ function ResetPassword {
   if ($user.DistinguishedName -like '*student*') {
     $Date = Get-Date -Format '%y'
     if ([System.Windows.Forms.MessageBox]::Show("Reset $($user.DisplayName) to Packers$Date ?", "Question", [System.Windows.Forms.MessageBoxButtons]::OKCancel) -eq "OK") {
-      Set-ADAccountPassword -Identity $user.samaccountname -Reset -NewPassword (ConvertTo-SecureString "Packers$Date" -AsPlainText -Force) -Verbose 
-    } 
+      Set-ADAccountPassword -Identity $user.samaccountname -Reset -NewPassword (ConvertTo-SecureString "Packers$Date" -AsPlainText -Force) -Verbose
+    }
   } else {
     if ([System.Windows.Forms.MessageBox]::Show("Reset $($user.DisplayName) to austin.k12.mn.us ?", "Question", [System.Windows.Forms.MessageBoxButtons]::OKCancel) -eq "OK") {
-      Set-ADAccountPassword -Identity $user.samaccountname -Reset -NewPassword (ConvertTo-SecureString "austin.k12.mn.us" -AsPlainText -Force) -Verbose 
-    } 
+      Set-ADAccountPassword -Identity $user.samaccountname -Reset -NewPassword (ConvertTo-SecureString "austin.k12.mn.us" -AsPlainText -Force) -Verbose
+    }
   }
   Set-ADUser $user -ChangePasswordAtLogon $true
   Unlock-ADAccount -Identity $user
@@ -98,9 +98,9 @@ function Unlock {
 function SelectedUserName {
   $selected = @($listview_Users.SelectedIndices)
   $SamAccountNameColumnIndex = $listview_Users.Columns | Where-Object {$_.text -eq "samaccountName"} | Select-Object -ExpandProperty Index
-  $userSamAccountName  
+  $userSamAccountName
   $selected | ForEach-Object {
-    Set-Variable -Name UserName -Scope script -Value ($listview_Users.Items[$_].SubItems[$SamAccountNameColumnIndex]).Text 
+    Set-Variable -Name UserName -Scope script -Value ($listview_Users.Items[$_].SubItems[$SamAccountNameColumnIndex]).Text
   }
   Write-Output $UserName
 }
@@ -131,7 +131,7 @@ function PopulateFields {
   $checkBoxSec1_PAE.Checked = ($null -ne $userdata.extensionAttribute11)
   $checkBoxSec1_RIV.Checked = ($null -ne $userdata.extensionAttribute12)
   #Left
-  
+
   #right
   $textBox_ModifiedFirstName.Text = $userdata.GivenName
   $textBox_ModifiedLastName.Text = $userdata.Surname
@@ -156,7 +156,7 @@ function PopulateFields {
   $checkBoxSec2_PAE.Checked = ($null -ne $userdata.extensionAttribute11)
   $checkBoxSec2_RIV.Checked = ($null -ne $userdata.extensionAttribute12)
   #right
-} 
+}
 
 function ChangedFieldsOutput {
   param(
@@ -169,25 +169,25 @@ function ChangedFieldsOutput {
   }
   $props = @{
     'GUID'       = $GUID
-    'FirstName'  = $textBox_ModifiedFirstName.Text 
+    'FirstName'  = $textBox_ModifiedFirstName.Text
     'LastName'   = $textBox_ModifiedLastName.Text
     'NickName'   = $nickname
     'Username'   = $textBox_ModifiedUsername.Text
-    'Position'   = $textBox_ModifiedPosition.Text 
+    'Position'   = $textBox_ModifiedPosition.Text
     'Department' = $textBox_ModifiedDepartment.Text
     'Building'   = $textBox_ModifiedBuilding.Text
     'PWDReset'   = $checkBoxPwdRst.checked
-    'AHS'        = $checkBoxSec2_AHS.Checked 
-    'ELL'        = $checkBoxSec2_ELL.Checked 
-    'IJH'        = $checkBoxSec2_IJH.Checked 
-    'BAN'        = $checkBoxSec2_BAN.Checked 
-    'NEV'        = $checkBoxSec2_NEV.Checked 
-    'SOU'        = $checkBoxSec2_SOU.Checked 
-    'SUM'        = $checkBoxSec2_SUM.Checked 
-    'WOO'        = $checkBoxSec2_WOO.Checked 
-    'CLC'        = $checkBoxSec2_CLC.Checked 
-    'OAK'        = $checkBoxSec2_OAK.Checked 
-    'PAE'        = $checkBoxSec2_PAE.Checked 
+    'AHS'        = $checkBoxSec2_AHS.Checked
+    'ELL'        = $checkBoxSec2_ELL.Checked
+    'IJH'        = $checkBoxSec2_IJH.Checked
+    'BAN'        = $checkBoxSec2_BAN.Checked
+    'NEV'        = $checkBoxSec2_NEV.Checked
+    'SOU'        = $checkBoxSec2_SOU.Checked
+    'SUM'        = $checkBoxSec2_SUM.Checked
+    'WOO'        = $checkBoxSec2_WOO.Checked
+    'CLC'        = $checkBoxSec2_CLC.Checked
+    'OAK'        = $checkBoxSec2_OAK.Checked
+    'PAE'        = $checkBoxSec2_PAE.Checked
     'RIV'        = $checkBoxSec2_RIV.Checked
   }
   $obj = New-Object -TypeName psobject -Property $props
@@ -209,7 +209,7 @@ function PopulateStudentFields {
   $checkBox_Skype.Checked = ($null -ne $userdata.extensionAttribute2 )
   $checkBox_Email.Checked = ($null -ne $userdata.extensionAttribute3)
   #Left
-  
+
   #right
   $textBox_ModifiedFirstName.Text = $userdata.GivenName
   $textBox_ModifiedLastName.Text = $userdata.Surname
@@ -220,7 +220,7 @@ function PopulateStudentFields {
   $checkBoxSet_Skype.Checked = ($null -ne $userdata.extensionAttribute2 )
   $checkBoxSet_Email.Checked = ($null -ne $userdata.extensionAttribute3 )
   #right
-} 
+}
 
 function PopulateNewStudent {
   #Left

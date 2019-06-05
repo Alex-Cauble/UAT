@@ -41,16 +41,16 @@ function CreateInfo {
   $row11 = 380
   $row12 = 410
   $row13 = 440
-   
+
   # ---=== Define Position Dropdown Options ===---
   [String[]]$DD1 = Get-Content -Path "$($PSScriptRoot)\..\data\PositionList.txt"
-    
+
   # ---=== Define Department Dropdown Options ===---
   [String[]]$DD2 = get-content -Path "$($PSScriptRoot)\..\data\DepartmentList.txt"
-    
+
   # ---=== Define Primary Building Dropdown Options ===---
   [String[]]$DD3 = Get-Content -Path "$($PSScriptRoot)\..\data\BuildingsList.txt"
-    
+
   $labelFont = New-Object System.Drawing.Font("Verdana", 10.5)
   $checkBoxFont = New-Object System.Drawing.Font("Verdana", 9)
 
@@ -74,7 +74,7 @@ function CreateInfo {
   $header_TextFields.Font = New-Object System.Drawing.Font("Verdana", 14);
   $header_TextFields.TextAlign = "MiddleCenter";
   $header_TextFields.Text = $LabelData.Header
-  
+
   # ---=== Define textBox1 ===---
   $Label_FirstName = New-Object System.Windows.Forms.Label;
   $Label_FirstName.Left = $ll;
@@ -83,7 +83,7 @@ function CreateInfo {
   $Label_FirstName.Font = $labelFont;
   $Label_FirstName.RightToLeft = "Yes";
   $Label_FirstName.Text = $LabelData.FirstName;
-  
+
   $TextBox_FirstName = New-Object System.Windows.Forms.TextBox;
   $TextBox_FirstName.Left = $ltb;
   $TextBox_FirstName.TabIndex = 0;
@@ -94,7 +94,7 @@ function CreateInfo {
       $TextBox_FirstName.SelectionStart = $TextBox_FirstName.Text.Length
       $TextBox_FirstName.SelectionLength = 0
     })
-  
+
   # ---=== Define textBox2 ===---
   $Label_LastName = New-Object System.Windows.Forms.Label;
   $Label_LastName.Left = $ll;
@@ -199,7 +199,7 @@ function CreateInfo {
   $Label_DD2_Department.width = $wl;
   $Label_DD2_Department.RightToLeft = "Yes";
   $Label_DD2_Department.Text = $LabelData.Department;
-    
+
   $DropDown2_Department = new-object System.Windows.Forms.ComboBox;
   $DropDown2_Department.Left = $ldd;
   $DropDown2_Department.Top = $row6;
@@ -335,7 +335,7 @@ function CreateInfo {
   $okbutton.Text = 'Ok';
 
   $obj = [APSAccountData]::new();
-  
+
   $okbutton.Add_Click( {
       if ($TextBox_UserName.Text.Length -ne 0) {
         $obj.SamAccountName = $TextBox_UserName.Text;

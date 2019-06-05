@@ -22,14 +22,14 @@ function DisableUserWindow {
   $Button_DisableNow.Location = New-Object System.Drawing.Size(5, 170)
   $Button_DisableNow.Font = New-Object System.Drawing.Font("Verdana", 9)
   $Button_DisableNow.Text = 'Disable Now'
-  $Button_DisableNow.Add_Click( { 
+  $Button_DisableNow.Add_Click( {
       $date = Get-Date
       Disable-User -Date $date -Username $UserName
       Disable-UserNow -SamAccountName $UserName
       [void]$Form_Disable.Close()
     })
   $Form_Disable.Controls.Add($Button_DisableNow)
-  
+
   $Button_SetDisableDate = New-Object System.Windows.Forms.Button
   $Button_SetDisableDate.Size = New-Object System.Drawing.Size(80, 20)
   $Button_SetDisableDate.Location = New-Object System.Drawing.Size(115, 170)

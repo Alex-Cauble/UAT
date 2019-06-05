@@ -7,8 +7,12 @@
 [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
 
 #Importing used modules
-$s = New-PSSession -ComputerName 'sccm'   
-Import-Module -PSSession $s -Name ActiveDirectory
+try {
+  $s = New-PSSession -ComputerName 'sccm' -ErrorAction Stop
+  Import-Module -PSSession $s -Name ActiveDirectory -ErrorAction Stop
+} catch {
+  Import-Module ActiveDirectory -ErrorAction Stop
+}
 
 . "$($PSScriptRoot)\GuiFunctions.ps1"
 . "$($PSScriptRoot)\NewStaff.ps1"
@@ -76,7 +80,7 @@ $textBox_SearchName.add_KeyDown( {
     if ($_.KeyCode -eq "Enter") {searchADUser}
   })
 $Form_LookUp.Controls.Add($textBox_SearchName)
-    
+
 $X = 15;
 $XSpacer = 125;
 $Y = 395
@@ -208,7 +212,7 @@ $button_DisableUser.Add_Click( {
     searchADUser
   })
 $Form_LookUp.Controls.Add($button_DisableUser)
-  
+
 $button_PWReset = New-Object System.Windows.Forms.Button
 $button_PWReset.Location = New-Object System.Drawing.Size(700, 40)
 $button_PWReset.Size = New-Object System.Drawing.Size(130, 150)
@@ -227,7 +231,7 @@ $button_PWReset.Add_Click( {
     }
   })
 $Form_LookUp.Controls.Add($button_PWReset)
-  
+
 $button_Unlock = New-Object System.Windows.Forms.Button
 $button_Unlock.Location = New-Object System.Drawing.Size(700, 200)
 $button_Unlock.Size = New-Object System.Drawing.Size(130, 150)

@@ -258,7 +258,7 @@ function ModifyStudent {
   $textBox_ModifiedFirstName.add_TextChanged( {
       $textBox_ModifiedFirstName.Text = CapitalizeName -Name $textBox_ModifiedFirstName.Text
       $textBox_ModifiedFirstName.SelectionStart = $textBox_ModifiedFirstName.Text.Length
-      $textBox_ModifiedFirstName.SelectionLength = 0   
+      $textBox_ModifiedFirstName.SelectionLength = 0
     })
   $Form_ModifyStudent.Controls.Add($textBox_ModifiedFirstName)
 
@@ -271,7 +271,7 @@ function ModifyStudent {
   $textBox_ModifiedLastName.add_TextChanged( {
       $textBox_ModifiedLastName.Text = CapitalizeName -Name $textBox_ModifiedLastName.Text
       $textBox_ModifiedLastName.SelectionStart = $textBox_ModifiedLastName.Text.Length
-      $textBox_ModifiedLastName.SelectionLength = 0   
+      $textBox_ModifiedLastName.SelectionLength = 0
     })
   $Form_ModifyStudent.Controls.Add($textBox_ModifiedLastName)
 
@@ -294,7 +294,7 @@ function ModifyStudent {
   }
   $Form_ModifyStudent.Controls.Add($DropDown_Grade)
   $DDGrade_SelectedIndexChanged = {
-    
+
     if ($DropDown_Grade.Text -eq 'Grade 1' -or `
         $DropDown_Grade.Text -eq 'Grade 2' -or `
         $DropDown_Grade.Text -eq 'Grade 3' -or `
@@ -392,7 +392,7 @@ function ModifyStudent {
         -LastName $textBox_ModifiedLastName.Text -Grade $DropDown_Grade.Text -Building $DropDown_Building.Text `
         -Advanced $checkBoxSet_Advanced.Checked -Skype $checkBoxSet_Skype.Checked -Email $checkBoxSet_Email.Checked `
         -ResetPassword $Checkbox_PwdReset.Checked -Violation $checkBoxSet_Violation.Checked
-      
+
       $Form_ModifyStudent.close();
     } )
   $Form_ModifyStudent.controls.Add($Button_Apply)

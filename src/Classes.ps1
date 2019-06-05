@@ -19,10 +19,10 @@ class APSAccountData {
   [Bool] $OAK
   [Bool] $PAE
   [Bool] $RIV
-  
+
   APSAccountData () {
   }
-  
+
   APSAccountData ([String]$FirstName, [String]$LastName, [String] $Nickname, [String]$Position, `
       [String]$Department, [String]$Building, [Bool] $AHS, [Bool] $ELL, [Bool] $IJH, [Bool] $BAN, [Bool] $NEV,
     [Bool] $SOU, [Bool] $SUM, [Bool] $WOO, [Bool] $CLC, [Bool] $OAK, [Bool] $PAE, [Bool] $RIV

@@ -24,12 +24,11 @@ function ModifyStaff {
     'Building'       = "Building:"
     'CheckBoxHeader' = "All Locations Worked"
   }
-  $textInfo = (Get-Culture).TextInfo
   #region ComboBox Data
   [String[]]$Position = Get-Content -Path "$($PSScriptRoot)\..\data\PositionList.txt"
-  
+
   [String[]]$Department = Get-Content -Path "$($PSScriptRoot)\..\data\DepartmentList.txt"
-  
+
   [String[]]$Building = Get-Content -Path "$($PSScriptRoot)\..\data\BuildingsList.txt"
   #endregion
 
@@ -413,7 +412,7 @@ function ModifyStaff {
         $Global:useNickname = $True
       }
     })
-  $Form_Modify.Controls.Add($button_genUsername) 
+  $Form_Modify.Controls.Add($button_genUsername)
 
   $Y += $YSpacer
   $textBox_ModifiedPosition = New-Object System.Windows.Forms.ComboBox

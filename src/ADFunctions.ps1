@@ -26,7 +26,7 @@ Function New-Staff {
   $SamAccountName = $UserName.ToLower()
   $UserPrincipalName = "$SamAccountName@austin.k12.mn.us"
   $OU = "OU=$Building,OU=Employee,DC=ISD492,DC=LOCAL"
-    
+
   if ($NickName.Length -gt 1) {
     $DisplayName = "$LastName, $NickName"
     $Name = "$($NickName) $($LastName)"
@@ -52,7 +52,7 @@ Function New-Staff {
     -Company $Position `
     -Path $OU
 
-  Start-Sleep -Seconds 2
+  Start-Sleep -Seconds 5
 
   Set-ADUser -Identity $SamAccountName `
     -Enabled $true `
@@ -62,7 +62,7 @@ Function New-Staff {
   Set-ADUser -Identity $SamAccountName -Replace @{msExchHideFromAddressLists = $false}
   Set-ADUser -Identity $SamAccountName -Add @{proxyAddresses = "SMTP:$UserPrincipalName"}
 
-  Start-Sleep -Seconds 2
+  Start-Sleep -Seconds 5
 
   Group-Staff -UserName $SamAccountName `
     -Position $Position `
@@ -109,7 +109,7 @@ Function Set-Staff {
   $SamAccountName = $UserName.ToLower()
   $UserPrincipalName = "$SamAccountName@austin.k12.mn.us"
   $OU = "OU=$Building,OU=Employee,DC=ISD492,DC=LOCAL"
-    
+
   if ($NickName.Length -gt 1) {
     $DisplayName = "$LastName, $NickName"
     $Name = "$($NickName) $($LastName)"
@@ -120,36 +120,36 @@ Function Set-Staff {
   }
 
   $user = Get-ADUser -Identity $GUID
-  Start-Sleep -Seconds 2
-  $user | Set-ADUser -UserPrincipalName $UserPrincipalName 
-  $user | Set-ADUser -DisplayName $DisplayName
-  $user | Set-ADUser -SamAccountName $SamAccountName
-  $user | Set-ADUser -GivenName $FirstName
-  $user | Set-ADUser -Surname $LastName
-  $user | Set-ADUser -City $Building
-  $user | Set-ADUser -State 'APS-Staff'
-  $user | Set-ADUser -Department $Department
-  $user | Set-ADUser -Title $Position
-  $user | Set-ADUser -Description $Position
-  $user | Set-ADUser -Company $Position
-  $user | Set-ADUser -EmailAddress $UserPrincipalName
-  $user | Set-ADUser -AccountExpirationDate $null
+  Start-Sleep -Seconds 5
+  Set-ADUser -Identity $user.ObjectGUID -UserPrincipalName $UserPrincipalName
+  Set-ADUser -Identity $user.ObjectGUID -DisplayName $DisplayName
+  Set-ADUser -Identity $user.ObjectGUID -SamAccountName $SamAccountName
+  Set-ADUser -Identity $user.ObjectGUID -GivenName $FirstName
+  Set-ADUser -Identity $user.ObjectGUID -Surname $LastName
+  Set-ADUser -Identity $user.ObjectGUID -City $Building
+  Set-ADUser -Identity $user.ObjectGUID -State 'APS-Staff'
+  Set-ADUser -Identity $user.ObjectGUID -Department $Department
+  Set-ADUser -Identity $user.ObjectGUID -Title $Position
+  Set-ADUser -Identity $user.ObjectGUID -Description $Position
+  Set-ADUser -Identity $user.ObjectGUID -Company $Position
+  Set-ADUser -Identity $user.ObjectGUID -EmailAddress $UserPrincipalName
+  Set-ADUser -Identity $user.ObjectGUID -AccountExpirationDate $null
 
   if ($NickName.Length -gt 1) {
-    Set-ADUser -Identity $user -OtherName $NickName
+    Set-ADUser -Identity $user.ObjectGUID -OtherName $NickName
   } else {
-    Set-ADUser -Identity $user -OtherName $null
+    Set-ADUser -Identity $user.ObjectGUID -OtherName $null
   }
   # ---=== Account enabled, updated, and moved. Password reset conditional. ===---
 
   Rename-ADObject -Identity $GUID -NewName $Name
-    
+
   Set-ADUser -Identity $GUID -Replace @{MailNickName = $SamAccountName}
   Set-ADUser -Identity $GUID -Replace @{msExchHideFromAddressLists = $false}
   Set-ADUser -Identity $GUID -Add @{proxyAddresses = "SMTP:$UserPrincipalName"}
   Set-ADUser -Identity $GUID -Enabled $true
   Clear-ADAccountExpiration -Identity $GUID
-    
+
   if ($ResetPassword -eq $true) {
     Set-ADAccountPassword -Identity $SamAccountName `
       -Reset -NewPassword (ConvertTo-SecureString "austin.k12.mn.us" -AsPlainText -Force)
@@ -161,7 +161,7 @@ Function Set-Staff {
   $DN = Get-ADUser -Identity $SamAccountName | Select-Object -ExpandProperty DistinguishedName
   Move-ADObject -Identity $DN -TargetPath $OU
 
-  Start-Sleep -Seconds 2
+  Start-Sleep -Seconds 5
 
   Group-Staff -UserName $SamAccountName `
     -Position $Position `
@@ -190,11 +190,11 @@ Function Set-Student {
     [Bool] $Skype,
     [Bool] $Email,
     [Bool] $Violation,
-    [Bool] $ResetPassword    
+    [Bool] $ResetPassword
   )
 
   $ConfirmPreference = 'None'
-  
+
   $Date = Get-Date -Format "%y"
   # $FullDate = Get-Date -Format "yyyy-MM-dd"
   # $DateTime = Get-Date
@@ -236,40 +236,40 @@ Function Set-Student {
     $DN = Get-ADUser -Identity $SamAccountName | Select-Object DistinguishedName
     $DNOnly = $DN.DistinguishedName
     Move-ADObject -Identity "$DNOnly" -TargetPath $OU
-    Start-Sleep -Seconds 2
+    Start-Sleep -Seconds 5
 
-    Add-ADGroupMember "DistrictStudents" $SamAccountName
-    Add-ADGroupMember "Student-PSO" $SamAccountName
-    Add-ADGroupMember "Office 365 - Student Basic" $SamAccountName
+    Add-ADGroupMember "DistrictStudents" $SamAccountName -Confirm:$false
+    Add-ADGroupMember "Student-PSO" $SamAccountName -Confirm:$false
+    Add-ADGroupMember "Office 365 - Student Basic" $SamAccountName -Confirm:$false
 
     $user = Get-ADUser -Identity $SamAccountName
 
     if ($Advanced -eq $true) {
-      Add-ADGroupMember "Office 365 - Student Advanced" $SamAccountName
-      Set-ADObject -Identity $user -Replace @{extensionAttribute1 = 'Advanced'}
+      Add-ADGroupMember "Office 365 - Student Advanced" $SamAccountName -Confirm:$false
+      Set-ADObject -Identity $user.ObjectGUID -Replace @{extensionAttribute1 = 'Advanced'}
     } else {
-      Remove-ADGroupMember "Office 365 - Student Advanced" $SamAccountName
-      Set-ADObject -Identity $user -Clear extensionAttribute1
+      Remove-ADGroupMember "Office 365 - Student Advanced" $SamAccountName -Confirm:$false
+      Set-ADObject -Identity $user.ObjectGUID -Clear extensionAttribute1
     }
 
     if ($Skype -eq $true) {
-      Add-ADGroupMember "Office 365 - Skype" $SamAccountName
-      Set-ADObject -Identity $user -Replace @{extensionAttribute2 = 'Skype'}
+      Add-ADGroupMember "Office 365 - Skype" $SamAccountName -Confirm:$false
+      Set-ADObject -Identity $user.ObjectGUID -Replace @{extensionAttribute2 = 'Skype'}
     } else {
       Remove-ADGroupMember "Office 365 - Skype" $SamAccountName
-      Set-ADObject -Identity $user -Clear extensionAttribute2
+      Set-ADObject -Identity $user.ObjectGUID -Clear extensionAttribute2 -Confirm:$false
     }
 
     if ($Email -eq $true) {
-      Add-ADGroupMember "Office 365 - Email" $SamAccountName
-      Set-ADObject -Identity $user -Replace @{extensionAttribute3 = 'EMail'}
+      Add-ADGroupMember "Office 365 - Email" $SamAccountName -Confirm:$false
+      Set-ADObject -Identity $user.ObjectGUID-Replace @{extensionAttribute3 = 'EMail'}
     } else {
-      Remove-ADGroupMember "Office 365 - Email" $SamAccountName
-      Set-ADObject -Identity $user -Clear extensionAttribute3
+      Remove-ADGroupMember "Office 365 - Email" $SamAccountName -Confirm:$false
+      Set-ADObject -Identity $user.ObjectGUID -Clear extensionAttribute3
     }
 
     if ($Violation -eq $true) {
-      Set-ADObject -Identity $user -Replace @{extensionAttribute15 = 'Violation'}
+      Set-ADObject -Identity $user.ObjectGUID-Replace @{extensionAttribute15 = 'Violation'}
     } else {
       Set-ADObject -Identity $user -Clear extensionAttribute15
     }
@@ -306,18 +306,18 @@ Function Set-Student {
 
     $user = Get-ADUser -Identity $SamAccountName
 
-    Add-ADGroupMember "DistrictStudents" $SamAccountName
-    Add-ADGroupMember "Student-PSO" $SamAccountName
-    Add-ADGroupMember "Office 365 - Student Basic" $SamAccountName
+    Add-ADGroupMember "DistrictStudents" $SamAccountName -Confirm:$false
+    Add-ADGroupMember "Student-PSO" $SamAccountName -Confirm:$false
+    Add-ADGroupMember "Office 365 - Student Basic" $SamAccountName -Confirm:$false
 
     if ($GradeLevel -ge 5) {
-      Add-ADGroupMember "Office 365 - Student Advanced" $SamAccountName
+      Add-ADGroupMember "Office 365 - Student Advanced" $SamAccountName -Confirm:$false
       Set-ADObject -Identity $user -Replace @{extensionAttribute1 = '365 Advanced'}
 
-      Add-ADGroupMember "Office 365 - Skype" $SamAccountName
+      Add-ADGroupMember "Office 365 - Skype" $SamAccountName -Confirm:$false
       Set-ADObject -Identity $user -Replace @{extensionAttribute2 = 'Skype'}
 
-      Add-ADGroupMember "Office 365 - Email" $SamAccountName
+      Add-ADGroupMember "Office 365 - Email" $SamAccountName -Confirm:$false
       Set-ADObject -Identity $user -Replace @{extensionAttribute3 = 'EMail'}
     }
   }
@@ -343,37 +343,35 @@ Function Group-Staff {
     [Bool] $PAE,
     [Bool] $RIV
   )
-  Start-Sleep -Seconds 2
-  $ConfirmPreference = 'None'
-
+  Start-Sleep -Seconds 5
   # ---=== Set variables for Group Membership ===---
   $user = Get-ADUser -Identity $UserName.ToLower()
-  
-  # ---=== Default Group Memberships ===---
-  Add-ADGroupMember -Identity "DistrictStaff" -Members $user 
-  Add-ADGroupMember -Identity "Office 365 - Staff" -Members $user 
-  Add-ADGroupMember -Identity "Office 365 - Azure Basic" -Members $user 
 
-  
+  # ---=== Default Group Memberships ===---
+  Add-ADGroupMember -Identity "DistrictStaff" -Members $user.ObjectGUID -Confirm:$false
+  Add-ADGroupMember -Identity "Office 365 - Staff" -Members $user.ObjectGUID -Confirm:$false
+  Add-ADGroupMember -Identity "Office 365 - Azure Basic" -Members $user.ObjectGUID -Confirm:$false
+
+
   # ---=== Position Based Group Assignments ===---
-  
+
   if ($Position -ne "School Board") {
-    Add-ADGroupMember -Identity "Employee-PSO" -Members $user   
-    Remove-ADGroupMember -Identity "Student-PSO" -Members $user 
-    Remove-ADGroupMember -Identity "LowSecurity-PSO" -Members $user 
-    Remove-ADGroupMember -Identity "Service-PSO" -Members $user 
+    Add-ADGroupMember -Identity "Employee-PSO" -Members $user.ObjectGUID -Confirm:$false
+    Remove-ADGroupMember -Identity "Student-PSO" -Members $user.ObjectGUID -Confirm:$false
+    Remove-ADGroupMember -Identity "LowSecurity-PSO" -Members $user.ObjectGUID -Confirm:$false
+    Remove-ADGroupMember -Identity "Service-PSO" -Members $user.ObjectGUID -Confirm:$false
   } else {
-    Add-ADGroupMember -Identity "LowSecurity-PSO" -Members $user 
-    Remove-ADGroupMember -Identity "Employee-PSO" -Members $user 
-    Remove-ADGroupMember -Identity "Student-PSO" -Members $user 
-    Remove-ADGroupMember -Identity "Service-PSO" -Members $user 
+    Add-ADGroupMember -Identity "LowSecurity-PSO" -Members $user.ObjectGUID -Confirm:$false
+    Remove-ADGroupMember -Identity "Employee-PSO" -Members $user.ObjectGUID -Confirm:$false
+    Remove-ADGroupMember -Identity "Student-PSO" -Members $user.ObjectGUID -Confirm:$false
+    Remove-ADGroupMember -Identity "Service-PSO" -Members $user.ObjectGUID -Confirm:$false
   }
-  
+
   if ($Position -eq "Teacher" -or `
       $Position -eq "Sub Teacher") {
-    Add-ADGroupMember -Identity "Teachers" -Members $user 
+    Add-ADGroupMember -Identity "Teachers" -Members $user.ObjectGUID -Confirm:$false
   } else {
-    Remove-ADGroupMember -Identity "Teachers" -Members $user 
+    Remove-ADGroupMember -Identity "Teachers" -Members $user.ObjectGUID -Confirm:$false
   }
 
   if ($Position.Startswith("Sub") -or `
@@ -381,112 +379,110 @@ Function Group-Staff {
       $Position -eq "Cafeteria" -or `
       $Position -eq "Custodian" -or `
       $Position -eq "School Board") {
-    Add-ADGroupMember -Identity "Track-IT_Users" -Members $user 
-    Remove-ADGroupMember -Identity "Track-IT_Staff" -Members $user 
+    Add-ADGroupMember -Identity "Track-IT_Users" -Members $user.ObjectGUID -Confirm:$false
+    Remove-ADGroupMember -Identity "Track-IT_Staff" -Members $user.ObjectGUID -Confirm:$false
   } else {
-    Add-ADGroupMember -Identity "Track-IT_Staff" -Members $user 
-    Remove-ADGroupMember -Identity "Track-IT_Users" -Members $user 
+    Add-ADGroupMember -Identity "Track-IT_Staff" -Members $user.ObjectGUID -Confirm:$false
+    Remove-ADGroupMember -Identity "Track-IT_Users" -Members $user.ObjectGUID -Confirm:$false
   }
 
   # ---=== Building Based Group Assignments ===---
-  
+
   if ($AHS -eq $true) {
-    Set-ADObject -Identity $user -Replace @{extensionAttribute1 = "AHS"} 
-    Add-ADGroupMember -Identity "Printing - AHS" -Members $user 
+    Set-ADObject -Identity $user.ObjectGUID -Replace @{extensionAttribute1 = "AHS"}
+    Add-ADGroupMember -Identity "Printing - AHS" -Members $user.ObjectGUID -Confirm:$false
   } else {
-    Set-ADObject -Identity $user -Clear extensionAttribute1 
-    Remove-ADGroupMember -Identity "Printing - AHS" -Members $user 
+    Set-ADObject -Identity $user.ObjectGUID -Clear extensionAttribute1
+    Remove-ADGroupMember -Identity "Printing - AHS" -Members $user.ObjectGUID -Confirm:$false
   }
 
   if ($ELL -eq $true) {
-    Set-ADObject -Identity $user -Replace @{extensionAttribute2 = "ELL"} 
-    Add-ADGroupMember -Identity "Printing - Ellis" -Members $user 
+    Set-ADObject -Identity $user.ObjectGUID -Replace @{extensionAttribute2 = "ELL"}
+    Add-ADGroupMember -Identity "Printing - Ellis" -Members $user.ObjectGUID -Confirm:$false
   } else {
-    Set-ADObject -Identity $user -Clear extensionAttribute2 
-    Remove-ADGroupMember -Identity "Printing - Ellis" -Members $user 
+    Set-ADObject -Identity $user.ObjectGUID -Clear extensionAttribute2
+    Remove-ADGroupMember -Identity "Printing - Ellis" -Members $user.ObjectGUID -Confirm:$false
   }
 
   if ($IJH -eq $true) {
-    Set-ADObject -Identity $user -Replace @{extensionAttribute3 = "IJH"} 
-    Add-ADGroupMember -Identity "Printing - Holton" -Members $user 
+    Set-ADObject -Identity $user.ObjectGUID -Replace @{extensionAttribute3 = "IJH"}
+    Add-ADGroupMember -Identity "Printing - Holton" -Members $user.ObjectGUID -Confirm:$false
   } else {
-    Set-ADObject -Identity $user -Clear extensionAttribute3 
-    Remove-ADGroupMember -Identity "Printing - Holton" -Members $user 
+    Set-ADObject -Identity $user.ObjectGUID -Clear extensionAttribute3
+    Remove-ADGroupMember -Identity "Printing - Holton" -Members $user.ObjectGUID -Confirm:$false
   }
 
   if ($BAN -eq $true) {
-    Set-ADObject -Identity $user -Replace @{extensionAttribute4 = "BAN"} 
-    Add-ADGroupMember -Identity "Printing - Banfield" -Members $user 
+    Set-ADObject -Identity $user.ObjectGUID -Replace @{extensionAttribute4 = "BAN"}
+    Add-ADGroupMember -Identity "Printing - Banfield" -Members $user.ObjectGUID -Confirm:$false
   } else {
-    Set-ADObject -Identity $user -Clear extensionAttribute4 
-    Remove-ADGroupMember -Identity "Printing - Banfield" -Members $user 
+    Set-ADObject -Identity $user.ObjectGUID -Clear extensionAttribute4
+    Remove-ADGroupMember -Identity "Printing - Banfield" -Members $user.ObjectGUID -Confirm:$false
   }
 
   if ($NEV -eq $true) {
-    Set-ADObject -Identity $user -Replace @{extensionAttribute5 = "NEV"} 
-    Add-ADGroupMember -Identity "Printing - Neveln" -Members $user 
+    Set-ADObject -Identity $user.ObjectGUID -Replace @{extensionAttribute5 = "NEV"}
+    Add-ADGroupMember -Identity "Printing - Neveln" -Members $user.ObjectGUID -Confirm:$false
   } else {
-    Set-ADObject -Identity $user -Clear extensionAttribute5 
-    Remove-ADGroupMember -Identity "Printing - Neveln" -Members $user 
+    Set-ADObject -Identity $user.ObjectGUID -Clear extensionAttribute5
+    Remove-ADGroupMember -Identity "Printing - Neveln" -Members $user.ObjectGUID -Confirm:$false
   }
 
   if ($SOU -eq $true) {
-    Set-ADObject -Identity $user -Replace @{extensionAttribute6 = "SOU"} 
-    Add-ADGroupMember -Identity "Printing - Southgate" -Members $user 
+    Set-ADObject -Identity $user.ObjectGUID -Replace @{extensionAttribute6 = "SOU"}
+    Add-ADGroupMember -Identity "Printing - Southgate" -Members $user.ObjectGUID -Confirm:$false
   } else {
-    Set-ADObject -Identity $user -Clear extensionAttribute6 
-    Remove-ADGroupMember -Identity "Printing - Southgate" -Members $user 
+    Set-ADObject -Identity $user.ObjectGUID -Clear extensionAttribute6
+    Remove-ADGroupMember -Identity "Printing - Southgate" -Members $user.ObjectGUID -Confirm:$false
   }
 
   if ($SUM -eq $true) {
-    Set-ADObject -Identity $user -Replace @{extensionAttribute7 = "SUM"} 
-    Add-ADGroupMember -Identity "Printing - Sumner" -Members $user 
+    Set-ADObject -Identity $user.ObjectGUID -Replace @{extensionAttribute7 = "SUM"}
+    Add-ADGroupMember -Identity "Printing - Sumner" -Members $user.ObjectGUID -Confirm:$false
   } else {
-    Set-ADObject -Identity $user -Clear extensionAttribute7 
-    Remove-ADGroupMember -Identity "Printing - Sumner" -Members $user
+    Set-ADObject -Identity $user.ObjectGUID -Clear extensionAttribute7
+    Remove-ADGroupMember -Identity "Printing - Sumner" -Members $user.ObjectGUID -Confirm:$false
   }
 
   if ($WOO -eq $true) {
-    Set-ADObject -Identity $user -Replace @{extensionAttribute8 = "WOO"} 
-    Add-ADGroupMember -Identity "Printing - Woodson" -Members $user
+    Set-ADObject -Identity $user.ObjectGUID -Replace @{extensionAttribute8 = "WOO"}
+    Add-ADGroupMember -Identity "Printing - Woodson" -Members $user.ObjectGUID -Confirm:$false
   } else {
-    Set-ADObject -Identity $user -Clear extensionAttribute8 
-    Remove-ADGroupMember -Identity "Printing - Woodson" -Members $user 
+    Set-ADObject -Identity $user.ObjectGUID -Clear extensionAttribute8
+    Remove-ADGroupMember -Identity "Printing - Woodson" -Members $user.ObjectGUID -Confirm:$false
   }
 
   if ($CLC -eq $true) {
-    Set-ADObject -Identity $user -Replace @{extensionAttribute9 = "CLC"} 
-    Add-ADGroupMember -Identity "Printing - CLC" -Members $user 
+    Set-ADObject -Identity $user.ObjectGUID -Replace @{extensionAttribute9 = "CLC"}
+    Add-ADGroupMember -Identity "Printing - CLC" -Members $user.ObjectGUID -Confirm:$false
   } else {
-    Set-ADObject -Identity $user -Clear extensionAttribute9 
-    Remove-ADGroupMember -Identity "Printing - CLC" -Members $user 
+    Set-ADObject -Identity $user.ObjectGUID -Clear extensionAttribute9
+    Remove-ADGroupMember -Identity "Printing - CLC" -Members $user.ObjectGUID -Confirm:$false
   }
-    
+
   if ($OAK -eq $true) {
-    Set-ADObject -Identity $user -Replace @{extensionAttribute10 = "OEC"} 
-    Add-ADGroupMember -Identity "Printing - OEC" -Members $user 
+    Set-ADObject -Identity $user.ObjectGUID -Replace @{extensionAttribute10 = "OEC"}
+    Add-ADGroupMember -Identity "Printing - OEC" -Members $user.ObjectGUID -Confirm:$false
   } else {
-    Set-ADObject -Identity $user -Clear extensionAttribute10 
-    Remove-ADGroupMember -Identity "Printing - OEC" -Members $user 
+    Set-ADObject -Identity $user.ObjectGUID -Clear extensionAttribute10
+    Remove-ADGroupMember -Identity "Printing - OEC" -Members $user.ObjectGUID -Confirm:$false
   }
 
   if ($PAE -eq $true) {
-    Set-ADObject -Identity $user -Replace @{extensionAttribute11 = "PAE"} 
-    Add-ADGroupMember -Identity "Printing - PAES" -Members $user 
+    Set-ADObject -Identity $user.ObjectGUID -Replace @{extensionAttribute11 = "PAE"}
+    Add-ADGroupMember -Identity "Printing - PAES" -Members $user.ObjectGUID -Confirm:$false
   } else {
-    Set-ADObject -Identity $user -Clear extensionAttribute11 
-    Remove-ADGroupMember -Identity "Printing - PAES" -Members $user 
+    Set-ADObject -Identity $user.ObjectGUID -Clear extensionAttribute11
+    Remove-ADGroupMember -Identity "Printing - PAES" -Members $user.ObjectGUID -Confirm:$false
   }
 
   if ($RIV -eq $true) {
-    Set-ADObject -Identity $user -Replace @{extensionAttribute12 = "RIV"} 
-    Add-ADGroupMember -Identity "Printing - Riverland" -Members $user 
+    Set-ADObject -Identity $user.ObjectGUID -Replace @{extensionAttribute12 = "RIV"}
+    Add-ADGroupMember -Identity "Printing - Riverland" -Members $user.ObjectGUID -Confirm:$false
   } else {
-    Set-ADObject -Identity $user -Clear extensionAttribute12 
-    Remove-ADGroupMember -Identity "Printing - Riverland" -Members $user 
+    Set-ADObject -Identity $user.ObjectGUID -Clear extensionAttribute12
+    Remove-ADGroupMember -Identity "Printing - Riverland" -Members $user.ObjectGUID -Confirm:$false
   }
-
-  $ConfirmPreference = 'High'
 }
 
 Function Disable-User {
@@ -515,19 +511,19 @@ function Disable-UserNow {
   }
 
 
-  $user | Set-ADUser -State "Account Disabled" `
+  Set-ADUser -Identity $user.ObjectGUID -State "Account Disabled" `
     -EmailAddress "$($user.SamAccountName)@austin.k12.mn.us" `
     -Enabled $false
-        
-  $user | Set-ADUser -Replace @{MailNickName = $user.SamAccountName}
-  $user | Set-ADUser -Replace @{msExchHideFromAddressLists = $true}
-  $user | Set-ADUser -Add @{proxyAddresses = "SMTP:$($user.SamAccountName)@austin.k12.mn.us"}
+
+  Set-ADUser -Identity $user.ObjectGUID -Replace @{MailNickName = $user.SamAccountName}
+  Set-ADUser -Identity $user.ObjectGUID -Replace @{msExchHideFromAddressLists = $true}
+  Set-ADUser -Identity $user.ObjectGUID -Add @{proxyAddresses = "SMTP:$($user.SamAccountName)@austin.k12.mn.us"}
 
   Move-ADObject -Identity $user.DistinguishedName -TargetPath $OU
 
 
   if ($null -ne $log) {
-    Start-Sleep -Seconds 2
+    Start-Sleep -Seconds 5
 
     Get-ADUser $SamAccountName `
       -Properties `
