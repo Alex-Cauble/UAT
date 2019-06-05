@@ -52,7 +52,7 @@ Function New-Staff {
     -Company $Position `
     -Path $OU
 
-  Start-Sleep -Seconds 5
+  Start-Sleep -Seconds 2
 
   Set-ADUser -Identity $SamAccountName `
     -Enabled $true `
@@ -62,7 +62,7 @@ Function New-Staff {
   Set-ADUser -Identity $SamAccountName -Replace @{msExchHideFromAddressLists = $false}
   Set-ADUser -Identity $SamAccountName -Add @{proxyAddresses = "SMTP:$UserPrincipalName"}
 
-  Start-Sleep -Seconds 5
+  Start-Sleep -Seconds 2
 
   Group-Staff -UserName $SamAccountName `
     -Position $Position `
@@ -120,7 +120,6 @@ Function Set-Staff {
   }
 
   $user = Get-ADUser -Identity $GUID
-  Start-Sleep -Seconds 5
   Set-ADUser -Identity $user.ObjectGUID -UserPrincipalName $UserPrincipalName
   Set-ADUser -Identity $user.ObjectGUID -DisplayName $DisplayName
   Set-ADUser -Identity $user.ObjectGUID -SamAccountName $SamAccountName
@@ -161,8 +160,6 @@ Function Set-Staff {
   $DN = Get-ADUser -Identity $SamAccountName | Select-Object -ExpandProperty DistinguishedName
   Move-ADObject -Identity $DN -TargetPath $OU
 
-  Start-Sleep -Seconds 5
-
   Group-Staff -UserName $SamAccountName `
     -Position $Position `
     -AHS $AHS `
@@ -193,11 +190,7 @@ Function Set-Student {
     [Bool] $ResetPassword
   )
 
-  $ConfirmPreference = 'None'
-
   $Date = Get-Date -Format "%y"
-  # $FullDate = Get-Date -Format "yyyy-MM-dd"
-  # $DateTime = Get-Date
 
   $ID = $UserName
   $Surname = $LastName
@@ -213,7 +206,6 @@ Function Set-Student {
     $Account = Get-ADUser $SamAccountName
     $Exist = $true
   }
-
   Catch {
     $Exist = $false
   }
@@ -236,7 +228,7 @@ Function Set-Student {
     $DN = Get-ADUser -Identity $SamAccountName | Select-Object DistinguishedName
     $DNOnly = $DN.DistinguishedName
     Move-ADObject -Identity "$DNOnly" -TargetPath $OU
-    Start-Sleep -Seconds 5
+    Start-Sleep -Seconds 1
 
     Add-ADGroupMember "DistrictStudents" $SamAccountName -Confirm:$false
     Add-ADGroupMember "Student-PSO" $SamAccountName -Confirm:$false
@@ -321,8 +313,6 @@ Function Set-Student {
       Set-ADObject -Identity $user -Replace @{extensionAttribute3 = 'EMail'}
     }
   }
-
-  $ConfirmPreference = 'High'
 }
 
 
@@ -343,7 +333,7 @@ Function Group-Staff {
     [Bool] $PAE,
     [Bool] $RIV
   )
-  Start-Sleep -Seconds 5
+  Start-Sleep -Seconds 1
   # ---=== Set variables for Group Membership ===---
   $user = Get-ADUser -Identity $UserName.ToLower()
 
@@ -523,7 +513,7 @@ function Disable-UserNow {
 
 
   if ($null -ne $log) {
-    Start-Sleep -Seconds 5
+    Start-Sleep -Seconds 1
 
     Get-ADUser $SamAccountName `
       -Properties `
