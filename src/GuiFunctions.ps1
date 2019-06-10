@@ -73,7 +73,7 @@ function PopulateListView {
 
 function ResetPassword {
   $U = SelectedUserName
-  $user = Get-ADUser -Identity $U[1] -Properties DisplayName
+  $user = Get-ADUser -Identity $U -Properties DisplayName, DistinguishedName
   if ($user.DistinguishedName -like '*student*') {
     $Date = Get-Date -Format '%y'
     if ([System.Windows.Forms.MessageBox]::Show("Reset $($user.DisplayName) to Packers$Date ?", "Question", [System.Windows.Forms.MessageBoxButtons]::OKCancel) -eq "OK") {
@@ -84,23 +84,22 @@ function ResetPassword {
       Set-ADAccountPassword -Identity $user.samaccountname -Reset -NewPassword (ConvertTo-SecureString "austin.k12.mn.us" -AsPlainText -Force) -Verbose
     }
   }
-  Set-ADUser $user -ChangePasswordAtLogon $true
-  Unlock-ADAccount -Identity $user
+  Set-ADUser -Identity $user.ObjectGuid -ChangePasswordAtLogon $true
+  Unlock-ADAccount -Identity $user.ObjectGuid
 }
 
 function Unlock {
   $U = SelectedUserName
-  $user = Get-ADUser -Identity $U[1] -Properties DisplayName
-  Unlock-ADAccount -Identity $user
+  $user = Get-ADUser -Identity $U -Properties DisplayName
+  Unlock-ADAccount -Identity $user.ObjectGuid
   searchADUser
 }
 
 function SelectedUserName {
   $selected = @($listview_Users.SelectedIndices)
   $SamAccountNameColumnIndex = $listview_Users.Columns | Where-Object {$_.text -eq "samaccountName"} | Select-Object -ExpandProperty Index
-  $userSamAccountName
   $selected | ForEach-Object {
-    Set-Variable -Name UserName -Scope script -Value ($listview_Users.Items[$_].SubItems[$SamAccountNameColumnIndex]).Text
+    [String] $UserName = ($listview_Users.Items[$_].SubItems[$SamAccountNameColumnIndex]).Text
   }
   Write-Output $UserName
 }

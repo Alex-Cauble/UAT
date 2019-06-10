@@ -90,7 +90,7 @@ function CreateInfo {
   $TextBox_FirstName.Top = $row1;
   $TextBox_FirstName.width = $wtb;
   $TextBox_FirstName.add_TextChanged( {
-      $TextBox_FirstName.Text = $textInfo.ToTitleCase($TextBox_FirstName.Text)
+      $TextBox_FirstName.Text = CapitalizeName -Name $TextBox_FirstName.Text
       $TextBox_FirstName.SelectionStart = $TextBox_FirstName.Text.Length
       $TextBox_FirstName.SelectionLength = 0
     })
@@ -110,9 +110,10 @@ function CreateInfo {
   $TextBox_LastName.Top = $row2;
   $TextBox_LastName.width = $wtb;
   $TextBox_LastName.add_TextChanged( {
-      $TextBox_LastName.Text = $textInfo.ToTitleCase($TextBox_LastName.Text)
+      $TextBox_LastName.Text = CapitalizeName -Name $TextBox_LastName.Text
       $TextBox_LastName.SelectionStart = $TextBox_LastName.Text.Length
       $TextBox_LastName.SelectionLength = 0
+
     })
 
   # --=== Define textBox3 ===--
@@ -130,7 +131,7 @@ function CreateInfo {
   $TextBox_NickName.Top = $row3;
   $TextBox_NickName.Width = $wtb;
   $TextBox_NickName.add_TextChanged( {
-      $TextBox_NickName.Text = $textInfo.ToTitleCase($TextBox_NickName.Text)
+      $TextBox_NickName.Text = CapitalizeName -Name $TextBox_NickName.Text
       $TextBox_NickName.SelectionStart = $TextBox_NickName.Text.Length
       $TextBox_NickName.SelectionLength = 0
     })

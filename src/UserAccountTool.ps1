@@ -177,15 +177,15 @@ $button_ModifyUser.text = "Modify User"
 $button_ModifyUser.Add_Click( {
     try {
       $userdata = SelectedUserName
-      if ((Get-ADUser $userdata[1]).DistinguishedName -like "*Student*") {
-        ModifyStudent -UserName $userdata[1]
+      if ((Get-ADUser $userdata).DistinguishedName -like "*Student*") {
+        ModifyStudent -UserName $userdata
       } else {
-        ModifyStaff -UserName $userdata[1]
+        ModifyStaff -UserName $userdata
       }
     } catch {
       [System.Windows.Forms.MessageBox]::Show("Select a user to modify.", "Selected User Required", [System.Windows.Forms.MessageBoxButtons]::OK)
     }
-    $textBox_SearchName.text = $userdata[1]
+    $textBox_SearchName.text = $userdata
     searchADUser
   })
 $Form_LookUp.Controls.Add($button_ModifyUser)
@@ -204,11 +204,11 @@ $button_DisableUser.text = "Disable Account"
 $button_DisableUser.Add_Click( {
     try {
       $userdata = SelectedUserName
-      DisableUserWindow -UserName $userdata[1]
+      DisableUserWindow -UserName $userdata
     } catch {
       [System.Windows.Forms.MessageBox]::Show("Select a user to Disable.", "Selected User Required", [System.Windows.Forms.MessageBoxButtons]::OK)
     }
-    $textBox_SearchName.text = $userdata[1]
+    $textBox_SearchName.text = $userdata
     searchADUser
   })
 $Form_LookUp.Controls.Add($button_DisableUser)
