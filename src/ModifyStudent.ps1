@@ -8,7 +8,6 @@ function ModifyStudent {
   )
 
   Add-Type -AssemblyName System.Windows.Forms
-  Import-Module ActiveDirectory
 
   . "$($PSScriptRoot)\GuiFunctions.ps1"
   . "$($PSScriptRoot)\ADFunctions.ps1"
@@ -25,8 +24,9 @@ function ModifyStudent {
     'CheckBoxHeader' = "Account Permissions"
   }
   #Importing Data From data files
-  [String[]]$Grade = Get-Content -Path "$($PSScriptRoot)\..\data\GradesList.txt"
-  [String[]]$Building = Get-Content -Path "$($PSScriptRoot)\..\data\SchoolsList.txt"
+  $ImpData = Get-Content -Path "$($PSScriptRoot)\..\data\Data.json"
+  [String[]]$Grade = $ImpData.Grades
+  [String[]]$Building = $ImpData.Buildings
 
   $Form_ModifyStudent = New-Object System.Windows.Forms.Form
   $Form_ModifyStudent.Text = "User Accounts Tool"

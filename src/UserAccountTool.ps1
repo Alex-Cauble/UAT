@@ -6,9 +6,10 @@
 # Load required assembies
 [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
 
+$ImpData = Get-Content -Path "$($PSScriptRoot)\..\data\Data.json" | ConvertFrom-Json
 #Importing used modules
 try {
-  $s = New-PSSession -ComputerName 'sccm' -ErrorAction Stop
+  $s = New-PSSession -ComputerName $ImpData.RunningOn -ErrorAction Stop
   Import-Module -PSSession $s -Name ActiveDirectory -ErrorAction Stop
 } catch {
   Import-Module ActiveDirectory -ErrorAction Stop

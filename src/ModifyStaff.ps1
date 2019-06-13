@@ -25,11 +25,10 @@ function ModifyStaff {
     'CheckBoxHeader' = "All Locations Worked"
   }
   #region ComboBox Data
-  [String[]]$Position = Get-Content -Path "$($PSScriptRoot)\..\data\PositionList.txt"
-
-  [String[]]$Department = Get-Content -Path "$($PSScriptRoot)\..\data\DepartmentList.txt"
-
-  [String[]]$Building = Get-Content -Path "$($PSScriptRoot)\..\data\BuildingsList.txt"
+  $ImpData = Get-Content -Path "$($PSScriptRoot)\..\data\Data.json" | ConvertFrom-Json
+  [String[]]$Position = $ImpData.Positions
+  [String[]]$Department = $ImpData.Departments
+  [String[]]$Building = $ImpData.Buildings
   #endregion
 
   $Form_Modify = New-Object System.Windows.Forms.Form

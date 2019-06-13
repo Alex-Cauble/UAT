@@ -42,14 +42,16 @@ function CreateInfo {
   $row12 = 410
   $row13 = 440
 
+  $ImpData = Get-Content -Path "$($PSScriptRoot)\..\data\Data.json" | ConvertFrom-Json
+
   # ---=== Define Position Dropdown Options ===---
-  [String[]]$DD1 = Get-Content -Path "$($PSScriptRoot)\..\data\PositionList.txt"
+  [String[]]$DD1 = $ImpData.Positions
 
   # ---=== Define Department Dropdown Options ===---
-  [String[]]$DD2 = get-content -Path "$($PSScriptRoot)\..\data\DepartmentList.txt"
+  [String[]]$DD2 = $ImpData.Departments
 
   # ---=== Define Primary Building Dropdown Options ===---
-  [String[]]$DD3 = Get-Content -Path "$($PSScriptRoot)\..\data\BuildingsList.txt"
+  [String[]]$DD3 = $ImpData.Buildings
 
   $labelFont = New-Object System.Drawing.Font("Verdana", 10.5)
   $checkBoxFont = New-Object System.Drawing.Font("Verdana", 9)
