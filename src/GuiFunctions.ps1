@@ -99,9 +99,8 @@ function SelectedUserName {
   $selected = @($listview_Users.SelectedIndices)
   $SamAccountNameColumnIndex = $listview_Users.Columns | Where-Object {$_.text -eq "samaccountName"} | Select-Object -ExpandProperty Index
   $selected | ForEach-Object {
-    [String] $UserName = ($listview_Users.Items[$_].SubItems[$SamAccountNameColumnIndex]).Text
+    Write-Output ($listview_Users.Items[$_].SubItems[$SamAccountNameColumnIndex]).Text
   }
-  Write-Output $UserName
 }
 
 function PopulateFields {
