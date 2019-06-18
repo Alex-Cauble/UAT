@@ -431,7 +431,7 @@ function ModifyStaff {
     } else {
       $textBox_ModifiedPosition.DropDownStyle = 'DropDownList'
     }
-    EnableApplyButton
+    # EnableApplyButton
   }
   $textBox_ModifiedPosition.add_SelectedIndexChanged($Position_SelectedIndexChanged)
 
@@ -445,7 +445,7 @@ function ModifyStaff {
   foreach ($item in $Department) {
     [void]$textBox_ModifiedDepartment.Items.add($item)
   }
-  $textBox_ModifiedDepartment.add_SelectedIndexChanged( {EnableApplyButton})
+  # $textBox_ModifiedDepartment.add_SelectedIndexChanged( {EnableApplyButton})
   $Form_Modify.Controls.Add($textBox_ModifiedDepartment)
 
   $Y += $YSpacer
@@ -458,7 +458,7 @@ function ModifyStaff {
   foreach ($item in $Building) {
     [void]$textBox_ModifiedBuilding.Items.add($item)
   }
-  $textBox_ModifiedBuilding.add_SelectedIndexChanged( {EnableApplyButton})
+  # $textBox_ModifiedBuilding.add_SelectedIndexChanged( {EnableApplyButton})
   $Form_Modify.Controls.Add($textBox_ModifiedBuilding)
 
   $checkBoxTitle1 = New-Object System.Windows.Forms.Label;
