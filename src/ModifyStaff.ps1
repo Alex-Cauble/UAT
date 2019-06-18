@@ -431,6 +431,7 @@ function ModifyStaff {
     } else {
       $textBox_ModifiedPosition.DropDownStyle = 'DropDownList'
     }
+    EnableApplyButton
   }
   $textBox_ModifiedPosition.add_SelectedIndexChanged($Position_SelectedIndexChanged)
 
@@ -444,6 +445,7 @@ function ModifyStaff {
   foreach ($item in $Department) {
     [void]$textBox_ModifiedDepartment.Items.add($item)
   }
+  $textBox_ModifiedDepartment.add_SelectedIndexChanged( {EnableApplyButton})
   $Form_Modify.Controls.Add($textBox_ModifiedDepartment)
 
   $Y += $YSpacer
@@ -456,6 +458,7 @@ function ModifyStaff {
   foreach ($item in $Building) {
     [void]$textBox_ModifiedBuilding.Items.add($item)
   }
+  $textBox_ModifiedBuilding.add_SelectedIndexChanged( {EnableApplyButton})
   $Form_Modify.Controls.Add($textBox_ModifiedBuilding)
 
   $checkBoxTitle1 = New-Object System.Windows.Forms.Label;
@@ -550,18 +553,30 @@ function ModifyStaff {
   $Button_Apply.ADD_Click( {
       try {
         $userdat = ChangedFieldsOutput -GUID (Get-ADUser $UserName).ObjectGUID
-        if ($null -eq $userdat.Building) {
+        if ($null -eq $userdat.Building -or $userdat.Building.Length -lt 1) {
           throw 'building required'
+        }
+        if ($null -eq $userdat.Department -or $userdat.Department.Length -lt 1) {
+          throw 'Department Required'
+        }
+        if ($null -eq $userdat.Position -or $userdat.Position.Length -lt 1) {
+          throw 'Position Required'
         }
         Set-Staff -GUID $userdat.GUID -FirstName $userdat.FirstName -LastName $userdat.LastName -Nickname $userdat.NickName -UserName $userdat.UserName`
           -Position $userdat.Position -Department $userdat.Department -Building $userdat.Building -AHS $userdat.AHS -ELL $userdat.ELL -IJH $userdat.IJH`
           -BAN $userdat.BAN -NEV $userdat.NEV -SOU $userdat.SOU -SUM $userdat.SUM -WOO $userdat.WOO -CLC $userdat.CLC -OAK $userdat.OAK -PAE $userdat.PAE`
           -RIV $userdat.RIV -ResetPassword $checkBoxPwdRst.Checked
       } catch {
-        [System.Windows.Forms.MessageBox]::Show("Username, FristName, LastName, Building are Required", "Username, FristName, LastName, Building are Required", [System.Windows.Forms.MessageBoxButtons]::OK)
+        [System.Windows.Forms.MessageBox]::Show("All Fields Required except Nickname", "All Fields Required except Nickname", [System.Windows.Forms.MessageBoxButtons]::OK)
       }
       $Form_Modify.close();
     } )
+  if ($textBox_ModifiedPosition.Text -lt 1 -or
+    $textBox_ModifiedDepartment -lt 1 -or
+    $textBox_ModifiedBuilding -lt 1) {
+    $Button_Apply.Enabled = $false
+  }
+
   $Form_Modify.controls.Add($Button_Apply)
 
   PopulateFields -UserName $UserName
