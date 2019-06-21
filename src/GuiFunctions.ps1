@@ -264,11 +264,8 @@ function CapitalizeName {
 }
 
 function EnableApplyButton {
-  if ($textBox_ModifiedPosition.Text -lt 1 -or
-    $textBox_ModifiedDepartment -lt 1 -or
-    $textBox_ModifiedBuilding -lt 1) {
+  $Button_Apply.Enabled = $true
+  if ($textBox_ModifiedPosition.Text.Length -lt 1 -or $textBox_ModifiedDepartment.Text.Length -lt 1 -or $textBox_ModifiedBuilding.Text.Length -lt 1) {
     $Button_Apply.Enabled = $false
-  } else {
-    $Button_Apply.Enabled = $true
-  }
+  } 
 }
