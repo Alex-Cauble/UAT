@@ -159,8 +159,11 @@ $button_NewUser.Add_Click( {
       [System.Windows.Forms.MessageBox]::Show("First, Last, Username, Building, Position, Department", `
           "Required Fields", [System.Windows.Forms.MessageBoxButtons]::OK)
     }
-    $textBox_SearchName.Text = $userdat.SamAccountName
-    searchADUser
+    try {
+      $textBox_SearchName.Text = $userdat.SamAccountName
+      searchADUser
+    } catch {
+    }
   })
 $Form_LookUp.Controls.Add($button_NewUser)
 
