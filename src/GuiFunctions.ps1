@@ -263,9 +263,16 @@ function CapitalizeName {
   Write-Output $Name
 }
 
-function EnableApplyButton {
+function ModifyStaffEnableApplyButton {
   $Button_Apply.Enabled = $true
   if ($textBox_ModifiedPosition.Text.Length -lt 1 -or $textBox_ModifiedDepartment.Text.Length -lt 1 -or $textBox_ModifiedBuilding.Text.Length -lt 1) {
     $Button_Apply.Enabled = $false
+  } 
+}
+
+function NewStaffEnableOkButton {
+  $okbutton.Enabled = $true
+  if ($DropDown1_Position.Text.Length -lt 1 -or $DropDown2_Department.Text.Length -lt 1 -or $DropDown3_Building.Text.Length -lt 1 -or $TextBox_FirstName.Text.Length -lt 1 -or $TextBox_LastName.Text.Length -lt 1 -or $TextBox_UserName.Text.Length -lt 1) {
+    $okbutton.Enabled = $false
   } 
 }
