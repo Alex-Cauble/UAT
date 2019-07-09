@@ -337,22 +337,24 @@ function CreateInfo {
   $okbutton.Width = 100;
   $okbutton.Text = 'Ok';
 
+  $okbutton.Enabled = $false;
+  # New User data object
   $obj = [APSAccountData]::new();
 
   $okbutton.Add_Click( {
-      if ($TextBox_UserName.Text.Length -ne 0) {
+      if ($TextBox_UserName.Text.Length -gt 1) {
         $obj.SamAccountName = $TextBox_UserName.Text;
-      } if ($TextBox_FirstName.Text.Length -ne 0) {
+      } if ($TextBox_FirstName.Text.Length -gt 1) {
         $obj.GivenName = $TextBox_FirstName.Text;
-      } if ($TextBox_LastName.Text.Length -ne 0) {
+      } if ($TextBox_LastName.Text.Length -gt 1) {
         $obj.Surname = $TextBox_LastName.Text;
-      } if ($TextBox_NickName.Text.Length -ne 0) {
+      } if ($TextBox_NickName.Text.Length -gt 1) {
         $obj.NickName = $TextBox_NickName.Text;
-      } if ($DropDown1_Position.Text.Length -ne 0) {
+      } if ($DropDown1_Position.Text.Length -gt 1) {
         $obj.Position = $DropDown1_Position.Text;
-      } if ($DropDown2_Department.SelectedItem.Length -ne 0) {
+      } if ($DropDown2_Department.SelectedItem.Length -gt 1) {
         $obj.Department = $DropDown2_Department.SelectedItem;
-      } if ($DropDown3_Building.SelectedItem.Length -ne 0) {
+      } if ($DropDown3_Building.SelectedItem.Length -gt 1) {
         $obj.Building = $DropDown3_Building.SelectedItem;
       }
       $obj.AHS = $checkBox_AHS.Checked
@@ -400,6 +402,7 @@ function CreateInfo {
   $form.Controls.Add($checkBox_CLC);
   $form.Controls.Add($checkBox_OEC);
   $form.Controls.Add($checkBox_PAE);
+  $form.Controls.Add($checkBox_RIV);
   $form.add_Shown( {
       $TextBox_FirstName.Focus();
     })
