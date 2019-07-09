@@ -348,6 +348,8 @@ function CreateInfo {
   $okbutton.Width = 100;
   $okbutton.Text = 'Ok';
   $okbutton.Enabled = $false;
+  # New User data object
+  $obj = [APSAccountData]::new();
 
   $okbutton.Add_Click( {
       if ($TextBox_UserName.Text.Length -gt 1) {
