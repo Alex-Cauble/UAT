@@ -1,7 +1,6 @@
 function CreateInfo {
   Add-Type -AssemblyName System.Windows.Forms
   . "$($PSScriptRoot)\Classes.ps1"
-  . "$($PSScriptRoot)\GuiFunctions.ps1"
 
   # ---=== Define Title & Label Names ===---
   $LabelData = @{
@@ -96,7 +95,6 @@ function CreateInfo {
       $TextBox_FirstName.Text = CapitalizeName -Name $TextBox_FirstName.Text
       $TextBox_FirstName.SelectionStart = $TextBox_FirstName.Text.Length
       $TextBox_FirstName.SelectionLength = 0
-      NewStaffEnableOkButton
     })
 
   # ---=== Define textBox2 ===---
@@ -117,7 +115,7 @@ function CreateInfo {
       $TextBox_LastName.Text = CapitalizeName -Name $TextBox_LastName.Text
       $TextBox_LastName.SelectionStart = $TextBox_LastName.Text.Length
       $TextBox_LastName.SelectionLength = 0
-      NewStaffEnableOkButton
+
     })
 
   # --=== Define textBox3 ===--
@@ -168,10 +166,7 @@ function CreateInfo {
   $TextBox_UserName.Left = $ltb;
   $TextBox_UserName.Top = $row4;
   $TextBox_UserName.width = $wtb;
-  $TextBox_UserName.add_TextChanged( {
-      NewStaffEnableOkButton
-	})
-	
+
   # ---=== Define DropDown1 ===---
   $Label_DD1_Position = New-Object System.Windows.Forms.Label;
   $Label_DD1_Position.Left = $ll;
@@ -197,12 +192,8 @@ function CreateInfo {
     } else {
       $DropDown1_Position.DropDownStyle = 'DropDownList'
     }
-    
   }
-	$DropDown1_Position.add_TextChanged({NewStaffEnableOkButton})
-	$DropDown1_Position.add_SelectedIndexChanged({NewStaffEnableOkButton})
   $DropDown1_Position.add_SelectedIndexChanged($DD1_SelectedIndexChanged)
-
   # ---=== Define DropDown2 ===---
   $Label_DD2_Department = New-Object System.Windows.Forms.Label;
   $Label_DD2_Department.Left = $ll;
@@ -219,7 +210,6 @@ function CreateInfo {
   $DropDown2_Department.Font = $checkBoxFont;
   $DropDown2_Department.width = $wdd;
   $DropDown2_Department.DropDownStyle = 'DropDownList'
-	$DropDown2_Department.add_SelectedIndexChanged({NewStaffEnableOkButton})
 
   ForEach ($Item in $DD2) {
     [void] $DropDown2_Department.Items.Add($Item)
@@ -241,7 +231,6 @@ function CreateInfo {
   $DropDown3_Building.Font = $checkBoxFont;
   $DropDown3_Building.width = $wdd;
   $DropDown3_Building.DropDownStyle = 'DropDownList'
-	$DropDown3_Building.add_SelectedIndexChanged({NewStaffEnableOkButton})
 
   ForEach ($Item in $DD3) {
     [void] $DropDown3_Building.Items.Add($Item)
@@ -347,7 +336,8 @@ function CreateInfo {
   $okbutton.Top = 525;
   $okbutton.Width = 100;
   $okbutton.Text = 'Ok';
-  $okbutton.Enabled = $false;
+
+  $obj = [APSAccountData]::new();
 
   $okbutton.Add_Click( {
       if ($TextBox_UserName.Text.Length -ne 0) {
@@ -414,8 +404,6 @@ function CreateInfo {
       $TextBox_FirstName.Focus();
     })
   $form.Controls.Add($checkBox_RIV);
-  [void]$form.ShowDialog();
-  Write-Output $obj
   [void]$form.ShowDialog();
   Write-Output $obj
 }
