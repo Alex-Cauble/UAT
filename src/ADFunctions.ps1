@@ -1,4 +1,13 @@
+function Test-IsUsernameFree {
+  [CmdletBinding()]
+  param([String] $Username)
+  if (Get-ADUser -Identity $Username) {
+    Write-Error "The Username $($Username) already taken"
+  }
+}
+
 Function New-Staff {
+  [cmdletbinding()]
   param(
     [String] $FirstName,
     [String] $LastName,
@@ -24,6 +33,14 @@ Function New-Staff {
   # ---=== Set variables for account update. ===---
 
   $SamAccountName = $UserName.ToLower()
+  Try {
+    Test-IsUsernameFree -Username $SamAccountName -ErrorAction Stop
+  } Catch {
+    [System.Windows.Forms.MessageBox]::Show("Username $($Username) Aleready Exists", `
+        "Duplicate Username", [System.Windows.Forms.MessageBoxButtons]::OK)
+    return;
+  }
+  
   $UserPrincipalName = "$SamAccountName@austin.k12.mn.us"
   $OU = "OU=$Building,OU=Employee,DC=ISD492,DC=LOCAL"
 
@@ -81,6 +98,7 @@ Function New-Staff {
 }
 
 Function Set-Staff {
+  [cmdletbinding()]
   param(
     [System.GUID] $GUID,
     [String] $FirstName,
@@ -107,6 +125,14 @@ Function Set-Staff {
   # ---=== Set variables for account update. ===---
 
   $SamAccountName = $UserName.ToLower()
+  Try {
+    Test-IsUsernameFree -Username $SamAccountName -ErrorAction Stop
+  } Catch {
+    [System.Windows.Forms.MessageBox]::Show("Username $($Username) Aleready Exists", `
+        "Duplicate Username", [System.Windows.Forms.MessageBoxButtons]::OK)
+    return;
+  }
+  
   $UserPrincipalName = "$SamAccountName@austin.k12.mn.us"
   $OU = "OU=$Building,OU=Employee,DC=ISD492,DC=LOCAL"
 
@@ -205,8 +231,7 @@ Function Set-Student {
   Try {
     $Account = Get-ADUser $SamAccountName
     $Exist = $true
-  }
-  Catch {
+  } Catch {
     $Exist = $false
   }
 
@@ -317,6 +342,7 @@ Function Set-Student {
 
 
 Function Group-Staff {
+  [cmdletbinding()]
   param(
     [String] $UserName,
     [String] $Position,
