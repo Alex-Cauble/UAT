@@ -125,13 +125,6 @@ Function Set-Staff {
   # ---=== Set variables for account update. ===---
 
   $SamAccountName = $UserName.ToLower()
-  Try {
-    Test-IsUsernameFree -Username $SamAccountName -ErrorAction Stop
-  } Catch {
-    [System.Windows.Forms.MessageBox]::Show("Username $($Username) Aleready Exists", `
-        "Duplicate Username", [System.Windows.Forms.MessageBoxButtons]::OK)
-    return;
-  }
   
   $UserPrincipalName = "$SamAccountName@austin.k12.mn.us"
   $OU = "OU=$Building,OU=Employee,DC=ISD492,DC=LOCAL"
@@ -146,6 +139,16 @@ Function Set-Staff {
   }
 
   $user = Get-ADUser -Identity $GUID
+  if ($user.SamAccountName -ne $UserName) {
+    Try {
+      Test-IsUsernameFree -Username $SamAccountName -ErrorAction Stop
+    } Catch {
+      [System.Windows.Forms.MessageBox]::Show("Username $($Username) Aleready Exists", `
+          "Duplicate Username", [System.Windows.Forms.MessageBoxButtons]::OK)
+      return;
+    }
+  }
+
   Set-ADUser -Identity $user.ObjectGUID -UserPrincipalName $UserPrincipalName
   Set-ADUser -Identity $user.ObjectGUID -DisplayName $DisplayName
   Set-ADUser -Identity $user.ObjectGUID -SamAccountName $SamAccountName
