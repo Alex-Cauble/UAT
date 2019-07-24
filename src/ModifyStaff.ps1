@@ -356,6 +356,7 @@ function ModifyStaff {
       $textBox_ModifiedFirstName.SelectionStart = $textBox_ModifiedFirstName.Text.Length
       $textBox_ModifiedFirstName.SelectionLength = 0
     })
+  $textBox_ModifiedFirstName.add_TextChanged( {ModifyStaffEnableApplyButton})
   $Form_Modify.Controls.Add($textBox_ModifiedFirstName)
 
   $Y += $YSpacer
@@ -368,6 +369,7 @@ function ModifyStaff {
       $textBox_ModifiedLastName.SelectionStart = $textBox_ModifiedLastName.Text.Length
       $textBox_ModifiedLastName.SelectionLength = 0
     })
+  $textBox_ModifiedLastName.add_TextChanged( {ModifyStaffEnableApplyButton})
   $Form_Modify.Controls.Add($textBox_ModifiedLastName)
 
   $Y += $YSpacer
@@ -380,6 +382,7 @@ function ModifyStaff {
       $textBox_ModifiedNickName.SelectionStart = $textBox_ModifiedNickName.Text.Length
       $textBox_ModifiedNickName.SelectionLength = 0
     })
+  $textBox_ModifiedNickName.add_TextChanged( {ModifyStaffEnableApplyButton})
   $Form_Modify.Controls.Add($textBox_ModifiedNickName)
 
   $Y += $YSpacer
@@ -388,6 +391,7 @@ function ModifyStaff {
   $textBox_ModifiedUsername.Size = $textBoxSize
   $textBox_ModifiedUsername.MaxLength = 20
   $textBox_ModifiedUsername.Enabled = $false
+  $textBox_ModifiedUsername.add_TextChanged( {ModifyStaffEnableApplyButton})
   $Form_Modify.Controls.Add($textBox_ModifiedUsername)
 
   $button_genUsername = New-Object System.Windows.Forms.Button
@@ -425,16 +429,9 @@ function ModifyStaff {
   }
   $Form_Modify.Controls.Add($textBox_ModifiedPosition)
 
-  $Position_SelectedIndexChanged = {
-    if ($textBox_ModifiedPosition.Text -eq 'Other-District [Edit]') {
-      $textBox_ModifiedPosition.DropDownStyle = 'DropDown'
-    } else {
-      $textBox_ModifiedPosition.DropDownStyle = 'DropDownList'
-    }
-  }
   $textBox_ModifiedPosition.add_TextChanged( {ModifyStaffEnableApplyButton})
   $textBox_ModifiedPosition.add_SelectedIndexChanged( {ModifyStaffEnableApplyButton})
-  $textBox_ModifiedPosition.add_SelectedIndexChanged($Position_SelectedIndexChanged)
+  $textBox_ModifiedPosition.add_SelectedIndexChanged( {Position_SelectedIndexChanged})
 
   $Y += $YSpacer
   $textBox_ModifiedDepartment = New-Object System.Windows.Forms.ComboBox
@@ -572,15 +569,16 @@ function ModifyStaff {
       }
       $Form_Modify.close();
     } )
-  if ($textBox_ModifiedPosition.Text -lt 1 -or
-    $textBox_ModifiedDepartment -lt 1 -or
-    $textBox_ModifiedBuilding -lt 1) {
+
+  PopulateFields -UserName $UserName
+
+  if ($textBox_ModifiedPosition.Text.Length -lt 1 -or
+    $textBox_ModifiedDepartment.Text.Length -lt 1 -or
+    $textBox_ModifiedBuilding.Text.Length -lt 1) {
     $Button_Apply.Enabled = $false
   }
 
   $Form_Modify.controls.Add($Button_Apply)
-
-  PopulateFields -UserName $UserName
 
   [void] $Form_Modify.ShowDialog()
 }

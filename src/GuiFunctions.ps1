@@ -265,24 +265,25 @@ function CapitalizeName {
 
 function ModifyStaffEnableApplyButton {
   $Button_Apply.Enabled = $true
-  if ($textBox_ModifiedFirstName.Text.Length -lt 1 -or $textBox_ModifiedLastName.Text.Length -lt 1 -or $textBox_ModifiedPosition.Text.Length -lt 1 -or $textBox_ModifiedDepartment.Text.Length -lt 1 -or $textBox_ModifiedBuilding.Text.Length -lt 1) {
+  if ($textBox_ModifiedPosition.Text.Length -lt 1 -or $textBox_ModifiedDepartment.Text.Length -lt 1 -or $textBox_ModifiedBuilding.Text.Length -lt 1 -or $textBox_ModifiedFirstName.Text.Length -lt 1 -or $textBox_ModifiedLastName.Text.Length -lt 1 -or $textBox_ModifiedUsername.Text.Length -lt 1) {
     $Button_Apply.Enabled = $false
     return;
   }
   if ($textBox_ModifiedUsername.text.Contains(' ')) {
     $Button_Apply.Enabled = $false
   }
-  if ($textBox_ModifiedFirstName.text[$textBox_ModifiedFirstName.text.Length - 1] -eq ' ' -or $textBox_ModifiedFirstName.text[0]) {
-    $Button_Apply.Enabled = $false
+  if ($textBox_ModifiedFirstName.text[$textBox_ModifiedFirstName.text.Length - 1] -eq ' ' -or $textBox_ModifiedFirstName.text[0] -eq ' ') {
+    $Button_Apply.enabled = $false
   }
-  if ($textBox_ModifiedLastName.text[$textBox_ModifiedLastName.text.Length - 1] -eq ' ' -or $textBox_ModifiedLastName.text[0]) {
-    $Button_Apply.Enabled = $false
+  if ($textBox_ModifiedLastName.text[$textBox_ModifiedLastName.text.Length - 1] -eq ' ' -or $textBox_ModifiedLastName.text[0] -eq ' ') {
+    $Button_Apply.enabled = $false
   }
   if ($textBox_ModifiedNickName.text.Length -gt 1) {
     if ($textBox_ModifiedNickName.text[$textBox_ModifiedNickName.text.Length - 1] -eq ' ' -or $textBox_ModifiedNickName.text[0] -eq ' ') {
-      $okbutton.enabled = $false
+      $Button_Apply.enabled = $false
     }
   }
+
 }
 
 function NewStaffEnableOkButton {
@@ -304,5 +305,13 @@ function NewStaffEnableOkButton {
     if ($TextBox_NickName.text[$TextBox_NickName.text.Length - 1] -eq ' ' -or $TextBox_NickName.text[0] -eq ' ') {
       $okbutton.enabled = $false
     }
+  }
+}
+
+function Position_SelectedIndexChanged {
+  if ($textBox_ModifiedPosition.Text -eq 'Other-District [Edit]') {
+    $textBox_ModifiedPosition.DropDownStyle = 'DropDown'
+  } else {
+    $textBox_ModifiedPosition.DropDownStyle = 'DropDownList'
   }
 }
