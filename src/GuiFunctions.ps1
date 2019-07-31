@@ -4,9 +4,9 @@ function searchADUser {
   $listview_USers.Columns.Clear()
   try {
     if ($textBox_SearchName -ne "") {
-      $Users = @(Get-ADUser -LDAPFilter ("(anr=" + $textBox_SearchName.text + ")") -Properties DisplayName, LockedOut, AccountExpirationDate|
+      $Users = @(Get-ADUser -LDAPFilter ("(anr=" + $textBox_SearchName.text + ")") -Properties DisplayName, LockedOut, AccountExpirationDate, WhenCreated, WhenChanged|
           Where-Object {($_.distinguishedname -notlike "*Users*") -and ($_.distinguishedname -notlike "*Test*") -and ($_.distinguishedname -notlike "*TechDept*")}|
-          Select-Object SamAccountName, Name, DisplayName, Enabled, LockedOut, @{n = 'ExpDate'; e = {$_.AccountExpirationDate.ToShortDateString()}}, @{n = 'OU'; e = {$_.DistinguishedName.split(',')[1].split('=')[1]}}|
+          Select-Object SamAccountName, Name, DisplayName, Enabled, LockedOut, @{n = 'ExpDate'; e = {$_.AccountExpirationDate.ToShortDateString()}}, @{n = 'OU'; e = {$_.DistinguishedName.split(',')[1].split('=')[1]}},WhenCreated, WhenChanged|
           Sort-Object DisplayName)
       PopulateListView -Users $Users
     }
@@ -20,9 +20,9 @@ function searchStaff {
   $listview_USers.Columns.Clear()
   try {
     if ($textBox_SearchName -ne "") {
-      $Users = @(Get-ADUser -LDAPFilter ("(anr=" + $textBox_SearchName.text + ")") -Properties DisplayName, LockedOut, AccountExpirationDate|
+      $Users = @(Get-ADUser -LDAPFilter ("(anr=" + $textBox_SearchName.text + ")") -Properties DisplayName, LockedOut, AccountExpirationDate, WhenCreated, WhenChanged|
           Where-Object {($_.distinguishedname -notlike "*Users*") -and ($_.distinguishedname -notlike "*Test*") -and ($_.distinguishedname -notlike "*TechDept*") -and ($_.distinguishedname -notlike "*Student*")}|
-          Select-Object SamAccountName, Name, DisplayName, Enabled, LockedOut, @{n = 'ExpDate'; e = {$_.AccountExpirationDate.ToShortDateString()}}, @{n = 'OU'; e = {$_.DistinguishedName.split(',')[1].split('=')[1]}}|
+          Select-Object SamAccountName, Name, DisplayName, Enabled, LockedOut, @{n = 'ExpDate'; e = {$_.AccountExpirationDate.ToShortDateString()}}, @{n = 'OU'; e = {$_.DistinguishedName.split(',')[1].split('=')[1]}}, WhenCreated, WhenChanged|
           Sort-Object DisplayName)
       PopulateListView -Users $Users
     }

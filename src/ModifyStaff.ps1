@@ -543,15 +543,6 @@ function ModifyStaff {
   $Button_Apply.ADD_Click( {
       try {
         $userdat = ChangedFieldsOutput -GUID (Get-ADUser $UserName).ObjectGUID
-        if ($null -eq $userdat.Building -or $userdat.Building.Length -lt 1) {
-          throw 'building required'
-        }
-        if ($null -eq $userdat.Department -or $userdat.Department.Length -lt 1) {
-          throw 'Department Required'
-        }
-        if ($null -eq $userdat.Position -or $userdat.Position.Length -lt 1) {
-          throw 'Position Required'
-        }
         Set-Staff -GUID $userdat.GUID -FirstName $userdat.FirstName -LastName $userdat.LastName -Nickname $userdat.NickName -UserName $userdat.UserName`
           -Position $userdat.Position -Department $userdat.Department -Building $userdat.Building -AHS $userdat.AHS -ELL $userdat.ELL -IJH $userdat.IJH`
           -BAN $userdat.BAN -NEV $userdat.NEV -SOU $userdat.SOU -SUM $userdat.SUM -WOO $userdat.WOO -CLC $userdat.CLC -OAK $userdat.OAK -PAE $userdat.PAE`

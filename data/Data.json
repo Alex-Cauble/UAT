@@ -9,7 +9,7 @@
     "Southgate",
     "Sumner",
     "Woodson",
-    "ClC",
+    "CLC",
     "Oakland EC",
     "Riverland",
     "District",
@@ -70,7 +70,8 @@
     "Sub Secretary",
     "Sub Teacher",
     "Success Coach",
-    "Teacher"
+    "Teacher",
+		"WSU Student Teacher"
   ],
   "Schools": [
     "AHS",
