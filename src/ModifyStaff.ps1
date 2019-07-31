@@ -400,18 +400,10 @@ function ModifyStaff {
   $button_genUsername.TabIndex = 3
   $button_genUsername.ADD_Click( {
       if ($useNickname) {
-        $string = "$($textBox_ModifiedNickName.Text).$($textBox_ModifiedLastName.Text)".ToLower()
-        if ($string.Length -gt 20) {
-          $string = $string.Substring(0, 20)
-        }
-        $textBox_ModifiedUsername.Text = $string
+        $textBox_ModifiedUsername.Text = Format-UserName -UserName "$($textBox_ModifiedNickName.Text).$($textBox_ModifiedLastName.Text)"
         $Global:useNickname = $False
       } else {
-        $string = "$($textBox_ModifiedFirstName.Text).$($textBox_ModifiedLastName.Text)".ToLower()
-        if ($string.Length -gt 20) {
-          $string = $string.Substring(0, 20)
-        }
-        $textBox_ModifiedUsername.Text = $string
+        $textBox_ModifiedUsername.Text = Format-UserName -UserName "$($textBox_ModifiedFirstName.Text).$($textBox_ModifiedLastName.Text)"
         $Global:useNickname = $True
       }
     })

@@ -315,3 +315,14 @@ function Position_SelectedIndexChanged {
     $textBox_ModifiedPosition.DropDownStyle = 'DropDownList'
   }
 }
+
+function Format-UserName ([String]$username) {
+  while ($username.Contains(' ')) {
+    $index = $username.IndexOf(' ')
+    $username = $username.Remove($index, 1)
+  }
+  if ($username.Length -gt 20) {
+    $username = $username.Substring(0, 20)
+  }
+  Write-Output $username.ToLower()
+}

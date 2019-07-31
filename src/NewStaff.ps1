@@ -156,10 +156,10 @@ function CreateInfo {
   $Button_generateUsername.size = New-Object System.Drawing.Size (8, 20)
   $Button_generateUsername.Add_Click( {
       if ($useNickname) {
-        $TextBox_UserName.Text = "$($TextBox_NickName.Text).$($TextBox_LastName.Text)".ToLower()
+        $TextBox_UserName.Text = Format-UserName -UserName "$($TextBox_NickName.Text).$($TextBox_LastName.Text)"
         $Global:useNickname = $false
       } else {
-        $TextBox_UserName.Text = "$($TextBox_FirstName.Text).$($TextBox_LastName.Text)".ToLower()
+        $TextBox_UserName.Text = Format-UserName -UserName "$($TextBox_FirstName.Text).$($TextBox_LastName.Text)"
         $Global:useNickname = $true
       }
     });
@@ -168,9 +168,10 @@ function CreateInfo {
   $TextBox_UserName.Left = $ltb;
   $TextBox_UserName.Top = $row4;
   $TextBox_UserName.width = $wtb;
+  $TextBox_UserName.Enabled = $False;
   $TextBox_UserName.add_TextChanged( {
       NewStaffEnableOkButton
-	})
+    })
 	
   # ---=== Define DropDown1 ===---
   $Label_DD1_Position = New-Object System.Windows.Forms.Label;
@@ -199,8 +200,8 @@ function CreateInfo {
     }
     
   }
-	$DropDown1_Position.add_TextChanged({NewStaffEnableOkButton})
-	$DropDown1_Position.add_SelectedIndexChanged({NewStaffEnableOkButton})
+  $DropDown1_Position.add_TextChanged( {NewStaffEnableOkButton})
+  $DropDown1_Position.add_SelectedIndexChanged( {NewStaffEnableOkButton})
   $DropDown1_Position.add_SelectedIndexChanged($DD1_SelectedIndexChanged)
 
   # ---=== Define DropDown2 ===---
@@ -219,7 +220,7 @@ function CreateInfo {
   $DropDown2_Department.Font = $checkBoxFont;
   $DropDown2_Department.width = $wdd;
   $DropDown2_Department.DropDownStyle = 'DropDownList'
-	$DropDown2_Department.add_SelectedIndexChanged({NewStaffEnableOkButton})
+  $DropDown2_Department.add_SelectedIndexChanged( {NewStaffEnableOkButton})
 
   ForEach ($Item in $DD2) {
     [void] $DropDown2_Department.Items.Add($Item)
@@ -241,7 +242,7 @@ function CreateInfo {
   $DropDown3_Building.Font = $checkBoxFont;
   $DropDown3_Building.width = $wdd;
   $DropDown3_Building.DropDownStyle = 'DropDownList'
-	$DropDown3_Building.add_SelectedIndexChanged({NewStaffEnableOkButton})
+  $DropDown3_Building.add_SelectedIndexChanged( {NewStaffEnableOkButton})
 
   ForEach ($Item in $DD3) {
     [void] $DropDown3_Building.Items.Add($Item)
